@@ -16,7 +16,6 @@ namespace Library
         private static int cardHeight;
 
         private GameWindow window;
-        private Graphics graphics;
 
         static Drawer()
         {
@@ -36,33 +35,32 @@ namespace Library
         public Drawer(GameWindow window)
         {
             this.window = window;
-            graphics = window.CreateGraphics();
         }
 
-        public void DrawCard(Card card, float x, float y, int width, int height, float rotation)
+        public void DrawCard(Graphics graphics, Card card, float x, float y, int width, int height, float rotation)
         {
-            if (card.Hidden) DrawBack(x, y, width, height, rotation);
-            else DrawFace(card, x, y, width, height, rotation);
+            if (card.Hidden) DrawBack(graphics, x, y, width, height, rotation);
+            else DrawFace(graphics, card, x, y, width, height, rotation);
         }
 
-        public void DrawBack(float x, float y)
+        public void DrawBack(Graphics graphics, float x, float y)
         {
-            DrawBack(x, y, cardWidth, cardHeight, 0);
+            DrawBack(graphics, x, y, cardWidth, cardHeight, 0);
         }
 
-        public void DrawBack(float x, float y, int width, int height, float rotation)
+        public void DrawBack(Graphics graphics, float x, float y, int width, int height, float rotation)
         {
             graphics.TranslateTransform(width / 2, height / 2);
             graphics.RotateTransform(rotation);
             graphics.DrawImage(cardBack, x, y, width, height);
         }
 
-        public void DrawFace(Card card, float x, float y)
+        public void DrawFace(Graphics graphics, Card card, float x, float y)
         {
-            DrawFace(card, x, y, cardWidth, cardHeight, 0);
+            DrawFace(graphics, card, x, y, cardWidth, cardHeight, 0);
         }
 
-        public void DrawFace(Card card, float x, float y, int width, int height, float rotation)
+        public void DrawFace(Graphics graphics, Card card, float x, float y, int width, int height, float rotation)
         {
             int srcX = card.Index * cardWidth;      //Räkna ut vart på Bitmapen kortet finns i x-led.
             int srcY = (int)card.Suit * cardHeight; //Räkna ut vart på Bitmapen kortet finns i y-led.
