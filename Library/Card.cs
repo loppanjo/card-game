@@ -20,6 +20,8 @@ namespace Library
         public int Value { get; private set; }
         public Suit Suit { get; private set; }
 
+        public bool Hidden { get; set; }
+
         //Tom konstruktor för att kunna skapa blanka kort.
         public Card() { }
 
