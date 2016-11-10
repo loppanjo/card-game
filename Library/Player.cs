@@ -8,6 +8,12 @@ namespace Library
 {
     public class Player
     {
+        public Player()
+        {
+            Hand = new Hand();
+        }
 
+        public string Name { get; set; }
+        public Hand Hand { get; private set; }
     }
 }

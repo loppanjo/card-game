@@ -6,25 +6,14 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Hand
+    public class Hand : CardCollection
     {
-        private List<Card> cards = new List<Card>();
-
         public Hand() { }
 
         public Hand(List<Card> cards)
-        {
-            this.cards = cards;
-        }
-
-        public List<Card> FindCards(Suit suit)
+            : base(cards)
         {
             
-        }
-
-        public List<Card> FindCards(int value)
-        {
-
         }
     }
 }

@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Library
 {
-    public partial class GameWindow : Component
+    public partial class GameWindow : Control
     {
-        
-
         public GameWindow()
         {
             InitializeComponent();
         }
 
-        public GameWindow(IContainer container)
-        {
-            container.Add(this);
+        public Player Player { get; set; }
 
-            InitializeComponent();
+        protected override void OnPaint(PaintEventArgs pe)
+        {
+            base.OnPaint(pe);
         }
     }
 }
