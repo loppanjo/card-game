@@ -28,10 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerForm));
 			this.btStartServer = new System.Windows.Forms.Button();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-			this.rtbConsole = new System.Windows.Forms.RichTextBox();
 			this.btStopServer = new System.Windows.Forms.Button();
+			this.rtbConsole = new System.Windows.Forms.RichTextBox();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -56,6 +57,16 @@
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(260, 29);
 			this.flowLayoutPanel1.TabIndex = 1;
 			// 
+			// btStopServer
+			// 
+			this.btStopServer.Enabled = false;
+			this.btStopServer.Location = new System.Drawing.Point(139, 3);
+			this.btStopServer.Name = "btStopServer";
+			this.btStopServer.Size = new System.Drawing.Size(75, 23);
+			this.btStopServer.TabIndex = 1;
+			this.btStopServer.Text = "Stop Server";
+			this.btStopServer.UseVisualStyleBackColor = true;
+			// 
 			// rtbConsole
 			// 
 			this.rtbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -68,24 +79,15 @@
 			this.rtbConsole.TabIndex = 2;
 			this.rtbConsole.Text = "";
 			// 
-			// btStopServer
-			// 
-			this.btStopServer.Enabled = false;
-			this.btStopServer.Location = new System.Drawing.Point(139, 3);
-			this.btStopServer.Name = "btStopServer";
-			this.btStopServer.Size = new System.Drawing.Size(75, 23);
-			this.btStopServer.TabIndex = 1;
-			this.btStopServer.Text = "Stop Server";
-			this.btStopServer.UseVisualStyleBackColor = true;
-			// 
-			// MainForm
+			// ServerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(284, 262);
 			this.Controls.Add(this.rtbConsole);
 			this.Controls.Add(this.flowLayoutPanel1);
-			this.Name = "MainForm";
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Name = "ServerForm";
 			this.Text = "Shithead Server";
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.ResumeLayout(false);
