@@ -17,11 +17,13 @@ namespace Library
             InitializeComponent();
         }
 
-        public Player Player { get; set; }
+        public Game Game { get; set; }
 
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
+
+
         }
     }
 }
