@@ -8,6 +8,10 @@ namespace Library
 {
     public class Shithead : Game
     {
+        public Shithead(GameRules rules) : base(rules)
+        {
+        }
+
         public override void Turn(Player player)
         {
             
