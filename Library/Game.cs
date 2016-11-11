@@ -30,7 +30,7 @@ namespace Library
             {
                 Playing = true;
                 Deal();
-                NextTurn();
+                // NextTurn(); DEBUG
             }
         }
 
