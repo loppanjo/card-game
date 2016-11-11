@@ -14,6 +14,7 @@ namespace Library
         public Game(GameRules rules)
         {
             this.rules = rules;
+            Players = new List<Player>();
             Deck = new Deck(rules.DeckSize);
         }
         

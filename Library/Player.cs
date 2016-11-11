@@ -9,8 +9,9 @@ namespace Library
 {
     public class Player
     {
-        public Player()
+        public Player(string name)
         {
+            Name = name;
             Hand = new Hand();
         }
 
