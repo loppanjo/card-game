@@ -13,9 +13,18 @@ namespace Client
 {
     public partial class Game : Form
     {
+        Drawer drawer;
+        Shithead shithead;
+
         public Game()
         {
             InitializeComponent();
+            shithead = new Shithead(new GameRules());
+            shithead.AddPlayer(new Player("Emil"));
+            shithead.AddPlayer(new Player("Eric"));
+            shithead.AddPlayer(new Player("André"));
+            shithead.AddPlayer(new Player("Lars"));
+            shithead.Start();
         }
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
@@ -55,6 +64,12 @@ namespace Client
         private void menuItemQuit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void gameWindow1_Paint(object sender, PaintEventArgs e)
+        {
+            drawer = new Drawer(gameWindow1, e.Graphics);
+            shithead.Draw(drawer);
         }
     }
 }
