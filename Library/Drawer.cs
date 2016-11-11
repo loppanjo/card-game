@@ -18,10 +18,10 @@ namespace Library
         private GameWindow window;
         private Graphics graphics;
         
-        public Drawer(GameWindow window)
+        public Drawer(GameWindow window, Graphics graphics)
         {
             this.window = window;
-            graphics = window.CreateGraphics();
+            this.graphics = graphics;
             try
             {
                 cardFaces = new Bitmap("resources/images/cardfaces.png");
