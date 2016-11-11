@@ -47,6 +47,7 @@
     <Compile Include="Deck.cs" />
     <Compile Include="Drawer.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameRules.cs" />
     <Compile Include="Shithead.cs" />
     <Compile Include="GameWindow.cs">
       <SubType>Component</SubType>

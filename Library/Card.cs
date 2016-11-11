@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Library
         public int Index { get; set; }
         public int Value { get; private set; }
         public Suit Suit { get; private set; }
-
+        
         public bool Hidden { get; set; }
 
         //Tom konstruktor för att kunna skapa blanka kort.
@@ -41,6 +42,11 @@ namespace Library
         public override string ToString()
         {
             return $"{Suit} {Value}";
+        }
+
+        public void Draw(Drawer drawer, RectangleF rectangle, float rotation)
+        {
+            drawer.DrawCard(this, rectangle.X, rectangle.Y, (int)rectangle.Width, (int)rectangle.Height, rotation);
         }
     }
 }

@@ -9,10 +9,12 @@ namespace Library
     public abstract class Game
     {
         private Player current;
+        private GameRules rules;
 
-        public Game()
+        public Game(GameRules rules)
         {
-            
+            this.rules = rules;
+            Deck = new Deck(rules.DeckSize);
         }
         
         protected List<Player> Players { get; set; }
@@ -26,7 +28,23 @@ namespace Library
             if (Players.Count > 0)
             {
                 Playing = true;
+                Deal();
                 NextTurn();
+            }
+        }
+
+        public void AddPlayer(Player player)
+        {
+            if(!Playing)
+                Players.Add(player);
+        }
+
+        private void Deal()
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                for (int j = 0; j < rules.StartCards; j++)
+                    Players[i].Hand.Take(Deck.Deal());
             }
         }
 
@@ -39,5 +57,11 @@ namespace Library
         }
 
         public abstract void Turn(Player player);
+
+        public void Draw(Drawer drawer)
+        {
+            for (int i = 0; i < Players.Count; i++)
+                Players[i].Draw(drawer, i, Players.Count);
+        }
     }
 }
