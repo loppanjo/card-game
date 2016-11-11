@@ -26,8 +26,8 @@ namespace Library
             Hand.Draw(drawer, 
                       index, 
                       new RectangleF(
-                          hw + (float)Math.Cos(angle) * hh * 0.9f,
-                          hh + (float)Math.Sin(angle) * hh * 0.9f, 
+                          hw + (float)Math.Cos(angle) * hh * 0.5f,
+                          hh + (float)Math.Sin(angle) * hh * 0.5f, 
                           drawer.GameHeight * 0.1f, 
                           drawer.GameHeight * 0.2f
                       ), 
