@@ -15,6 +15,7 @@ namespace Library
         public GameWindow()
         {
             InitializeComponent();
+            ResizeRedraw = true;
         }
 
         public Game Game { get; set; }
@@ -24,6 +25,12 @@ namespace Library
             base.OnPaint(pe);
 
 
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            Invalidate();
+            base.OnResize(e);
         }
     }
 }
