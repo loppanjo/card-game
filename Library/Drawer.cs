@@ -60,8 +60,8 @@ namespace Library
         public void DrawBack(float x, float y, int width, int height, float rotation)
         {
             GraphicsState state = graphics.Save();
-            graphics.TranslateTransform(-width / 2, -height / 2);
-            graphics.RotateTransform(rotation * RAD_TO_DEG);
+            graphics.TranslateTransform(-width / 2, -height / 2, MatrixOrder.Append);
+            graphics.RotateTransform(rotation * RAD_TO_DEG, MatrixOrder.Append);
 
             graphics.DrawImage(cardBack, x, y, width, height);
 
@@ -80,8 +80,8 @@ namespace Library
             //Rita ut ett kort på angiven position.
 
             GraphicsState state = graphics.Save();
-            graphics.TranslateTransform(-width / 2, -height / 2);
-            graphics.RotateTransform(rotation * RAD_TO_DEG);
+            graphics.TranslateTransform(-width / 2, -height / 2, MatrixOrder.Append);
+            graphics.RotateTransform(rotation * RAD_TO_DEG, MatrixOrder.Append);
             graphics.DrawImage(
                 cardFaces, 
                 new Rectangle((int)x, (int)y, width, height), 
