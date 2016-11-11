@@ -60,9 +60,10 @@ namespace Library
         {
             graphics.TranslateTransform(-width / 2, -height / 2);
             graphics.RotateTransform(rotation * RAD_TO_DEG);
+
             graphics.DrawImage(cardBack, x, y, width, height);
-            graphics.RotateTransform(-rotation * RAD_TO_DEG);
-            graphics.TranslateTransform(width / 2, height / 2);
+
+            graphics.ResetTransform();
         }
 
         public void DrawFace(Card card, float x, float y)
@@ -84,8 +85,7 @@ namespace Library
                 new Rectangle(srcX, srcY, cardWidth, cardHeight), 
                 GraphicsUnit.Pixel
             );
-            graphics.RotateTransform(-rotation * RAD_TO_DEG);
-            graphics.TranslateTransform(width / 2, height / 2);
+            graphics.ResetTransform();
         }
     }
 }
