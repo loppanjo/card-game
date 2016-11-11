@@ -12,18 +12,16 @@ namespace Library
     {
         private const float RAD_TO_DEG = 180.0f / (float)Math.PI;
 
-        private Bitmap cardFaces;
-        private Bitmap cardBack;
-        private int cardWidth;
-        private int cardHeight;
+        private static Bitmap cardFaces;
+        private static Bitmap cardBack;
+        private static int cardWidth;
+        private static int cardHeight;
 
         private GameWindow window;
         private Graphics graphics;
         
-        public Drawer(GameWindow window, Graphics graphics)
+        static Drawer()
         {
-            this.window = window;
-            this.graphics = graphics;
             try
             {
                 cardFaces = new Bitmap("resources/images/cardfaces.png");
@@ -35,6 +33,13 @@ namespace Library
             {
                 MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public Drawer(GameWindow window, Graphics graphics)
+        {
+            this.window = window;
+            this.graphics = graphics;
+            
         }
 
         public int GameWidth { get { return window.Width; } }
@@ -56,6 +61,8 @@ namespace Library
             graphics.TranslateTransform(-width / 2, -height / 2);
             graphics.RotateTransform(rotation * RAD_TO_DEG);
             graphics.DrawImage(cardBack, x, y, width, height);
+            graphics.RotateTransform(-rotation * RAD_TO_DEG);
+            graphics.TranslateTransform(width / 2, height / 2);
         }
 
         public void DrawFace(Card card, float x, float y)
@@ -77,6 +84,8 @@ namespace Library
                 new Rectangle(srcX, srcY, cardWidth, cardHeight), 
                 GraphicsUnit.Pixel
             );
+            graphics.RotateTransform(-rotation * RAD_TO_DEG);
+            graphics.TranslateTransform(width / 2, height / 2);
         }
     }
 }
