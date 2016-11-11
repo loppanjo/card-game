@@ -10,6 +10,8 @@ namespace Library
 {
     public class Drawer
     {
+        private const float RAD_TO_DEG = 180.0f / (float)Math.PI;
+
         private Bitmap cardFaces;
         private Bitmap cardBack;
         private int cardWidth;
@@ -52,7 +54,7 @@ namespace Library
         public void DrawBack(float x, float y, int width, int height, float rotation)
         {
             graphics.TranslateTransform(-width / 2, -height / 2);
-            graphics.RotateTransform(rotation);
+            graphics.RotateTransform(rotation * RAD_TO_DEG);
             graphics.DrawImage(cardBack, x, y, width, height);
         }
 
@@ -68,7 +70,7 @@ namespace Library
             //Rita ut ett kort på angiven position.
 
             graphics.TranslateTransform(-width / 2, -height / 2);
-            graphics.RotateTransform(rotation);
+            graphics.RotateTransform(rotation * RAD_TO_DEG);
             graphics.DrawImage(
                 cardFaces, 
                 new Rectangle((int)x, (int)y, width, height), 
