@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    class Client
+    public class Client
     {
         private string UserName { get; set; }
         private IHubProxy HubProxy { get; set; }
@@ -56,7 +56,7 @@ namespace Library
             }
             catch (HttpRequestException)
             {
-                //No connection: Don't enable Send button or show chat UI 
+                Console.WriteLine("Error Connecting!");
                 return;
             }
         }

@@ -111,6 +111,7 @@
             this.Name = "Game";
             this.ShowIcon = false;
             this.Text = "Cardgame";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_FormClosing);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);

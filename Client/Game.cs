@@ -13,11 +13,14 @@ namespace Client
 {
     public partial class Game : Form
     {
+        Library.Client client;
         Shithead shithead;
 
         public Game()
         {
             InitializeComponent();
+            client = new Library.Client("Frosberg", "http://localhost:8080");
+            client.Connect();
 
             shithead = new Shithead(new GameRules(), gameWindow1);
             gameWindow1.Game = shithead;
@@ -30,6 +33,7 @@ namespace Client
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
         {
+            client.Send("Hej");
             /*
              * Start a server and connect
              */
@@ -70,6 +74,11 @@ namespace Client
         private void gameWindow1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void Game_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            client.Disconnect();
         }
     }
 }
