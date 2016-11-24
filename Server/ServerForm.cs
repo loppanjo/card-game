@@ -82,11 +82,13 @@ namespace Server
 		}
 		internal void AddConnection(string s)
 		{
+			WriteToConsole("Client connected: " + s);
 			lbxConnections.Items.Add(s);
 			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
 		}
 		internal void RemoveConnection(string s)
 		{
+			WriteToConsole("Client disconnected: " + s);
 			lbxConnections.Items.Remove(s);
 			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
 		}
@@ -116,13 +118,12 @@ namespace Server
 		}
 		public override Task OnConnected()
 		{
-			Program.MainForm.WriteToConsole("Client connected: " + Context.ConnectionId);
+			base.Clients.Client(Context.ConnectionId);
 			Program.MainForm.AddConnection(Context.ConnectionId);
 			return base.OnConnected();
 		}
 		public override Task OnDisconnected(bool stopCalled)
 		{
-			Program.MainForm.WriteToConsole("Client disconnected: " + Context.ConnectionId);
 			Program.MainForm.RemoveConnection(Context.ConnectionId);
 			return base.OnDisconnected(stopCalled);
 		}
