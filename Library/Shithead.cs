@@ -8,7 +8,7 @@ namespace Library
 {
     public class Shithead : Game
     {
-        public Shithead(GameRules rules) : base(rules)
+        public Shithead(GameRules rules, GameWindow window) : base(rules, window)
         {
         }
 
