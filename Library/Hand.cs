@@ -16,11 +16,11 @@ namespace Library
         {
             
         }
-
-        public void Draw(Drawer drawer, int index, RectangleF rectangle, float rotation)
+        
+        public void Draw(Graphics graphics)
         {
             for (int i = 0; i < Cards.Count; i++)
-                Cards[i].Draw(drawer, rectangle, rotation);
+                Cards[i].Draw(graphics);
         }
     }
 }

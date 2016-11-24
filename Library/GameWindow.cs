@@ -23,8 +23,7 @@ namespace Library
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-
-
+            Game.Draw(pe.Graphics);
         }
 
         protected override void OnResize(EventArgs e)

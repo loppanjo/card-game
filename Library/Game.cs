@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +12,14 @@ namespace Library
     {
         private Player current;
         private GameRules rules;
+        private GameWindow window;
 
-        public Game(GameRules rules)
+        public Game(GameRules rules, GameWindow window)
         {
             this.rules = rules;
             Players = new List<Player>();
             Deck = new Deck(rules.DeckSize);
+            this.window = window;
         }
         
         protected List<Player> Players { get; set; }
@@ -59,10 +63,24 @@ namespace Library
 
         public abstract void Turn(Player player);
 
-        public void Draw(Drawer drawer)
+        public void Draw(Graphics graphics)
         {
+            float angle = (float)(Math.PI * 2) / Players.Count;
+            float hw = window.Width / 2;
+            float hh = window.Height / 2;
+            float min = Math.Min(window.Width, window.Height);
             for (int i = 0; i < Players.Count; i++)
-                Players[i].Draw(drawer, i, Players.Count);
+            {
+                float x = hw + (float)Math.Cos(angle * i) * min * 0.9f;
+                float y = hh + (float)Math.Sin(angle * i) * min * 0.9f;
+
+                GraphicsState state = graphics.Save();
+                graphics.TranslateTransform(x, y);
+
+                Players[i].Draw(graphics);
+
+                graphics.Restore(state);
+            }
         }
     }
 }

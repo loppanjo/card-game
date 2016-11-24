@@ -45,7 +45,6 @@
     <Compile Include="Card.cs" />
     <Compile Include="CardCollection.cs" />
     <Compile Include="Deck.cs" />
-    <Compile Include="Drawer.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameRules.cs" />
     <Compile Include="Shithead.cs" />
