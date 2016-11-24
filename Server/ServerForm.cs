@@ -17,41 +17,56 @@ namespace Server
 {
 	public partial class ServerForm : Form
 	{
+		private bool running;
 		private IDisposable SignalR { get; set; }
-		const string ServerURI = "http://localhost:42069";
 
 		public ServerForm()
 		{
 			InitializeComponent();
 		}
 
-		private void btStartServer_Click(object sender, EventArgs e)
+		private void btToggleServer_Click(object sender, EventArgs e)
 		{
-			WriteToConsole("Starting server...");
-			btStartServer.Enabled = false;
-			Task.Run(() => StartServer());
-		}
-		private void btStopServer_Click(object sender, EventArgs e)
-		{
-			// stänger ner servern
-			Close();
+			if (running)
+			{
+				// stänger ner serverfönstret
+				Close();
+			}
+			else
+			{
+				WriteToConsole("Starting server...");
+				btToggleServer.Enabled = false;
+				tbServerURI.Enabled = false;
+				Task.Run(() => StartServer());
+			}
 		}
 		private void StartServer()
 		{
 			try
 			{
-				SignalR = WebApp.Start(ServerURI);
+				SignalR = WebApp.Start(tbServerURI.Text);
 			}
 			catch (TargetInvocationException)
 			{
-				WriteToConsole("Server failed to start. A server is already running on " + ServerURI);
+				WriteToConsole("Server failed to start. Either a server is already running on " + tbServerURI.Text + ", or the URI is invalid.");
 				//Re-enable button to let user try  
 				//to start server again 
-				this.Invoke((Action)(() => btStartServer.Enabled = true));
+				this.Invoke((Action)(() =>
+				{
+					running = false;
+					btToggleServer.Text = "Start Server";
+					btToggleServer.Enabled = true;
+					tbServerURI.Enabled = true;
+				}));
 				return;
 			}
-			this.Invoke((Action)(() => btStopServer.Enabled = true));
-			WriteToConsole("Server started at " + ServerURI);
+			this.Invoke((Action)(() =>
+			{
+				running = true;
+				btToggleServer.Text = "Stop Server";
+				btToggleServer.Enabled = true;
+			}));
+			WriteToConsole("Server started at " + tbServerURI.Text);
 		}
 
 		internal void WriteToConsole(String message)
@@ -64,6 +79,16 @@ namespace Server
 				return;
 			}
 			rtbConsole.AppendText(message + Environment.NewLine);
+		}
+		internal void AddConnection(string s)
+		{
+			lbxConnections.Items.Add(s);
+			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
+		}
+		internal void RemoveConnection(string s)
+		{
+			lbxConnections.Items.Remove(s);
+			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
 		}
 
 		private void WinFormsServer_FormClosing(object sender, FormClosingEventArgs e)
@@ -92,11 +117,13 @@ namespace Server
 		public override Task OnConnected()
 		{
 			Program.MainForm.WriteToConsole("Client connected: " + Context.ConnectionId);
+			Program.MainForm.AddConnection(Context.ConnectionId);
 			return base.OnConnected();
 		}
 		public override Task OnDisconnected(bool stopCalled)
 		{
 			Program.MainForm.WriteToConsole("Client disconnected: " + Context.ConnectionId);
+			Program.MainForm.RemoveConnection(Context.ConnectionId);
 			return base.OnDisconnected(stopCalled);
 		}
 	}
