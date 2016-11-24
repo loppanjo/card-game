@@ -23,8 +23,10 @@ namespace Library
 
         private static Bitmap faces;
         private static Bitmap back;
-        private static int width;
-        private static int height;
+
+
+        public static int Width { get; set; }
+        public static int Height { get; set; }
         
         static Card()
         {
@@ -32,8 +34,8 @@ namespace Library
             {
                 faces = new Bitmap("resources/images/cardfaces.png");
                 back = new Bitmap("resources/images/cardback.png");
-                width = faces.Width / 13;
-                height = faces.Height / 4;
+                Width = faces.Width / 13;
+                Height = faces.Height / 4;
             }
             catch (Exception e)
             {
@@ -79,27 +81,27 @@ namespace Library
         public void DrawBack(Graphics graphics, float rotation)
         {
             GraphicsState state = graphics.Save();
-            graphics.TranslateTransform(-width / 2, -height / 2, MatrixOrder.Append);
-            graphics.RotateTransform(rotation * RAD_TO_DEG, MatrixOrder.Append);
+            graphics.TranslateTransform(-Width / 2, -Height / 2, MatrixOrder.Append);
+            //graphics.RotateTransform(rotation * RAD_TO_DEG, MatrixOrder.Append);
 
-            graphics.DrawImage(back, 0, 0, width, height);
+            graphics.DrawImage(back, 0, 0, Width, Height);
 
             graphics.Restore(state);
         }
 
         private void DrawFace(Graphics graphics, float rotation)
         {
-            int srcX = Index * width;      //Räkna ut vart på Bitmapen kortet finns i x-led.
-            int srcY = (int)Suit * height; //Räkna ut vart på Bitmapen kortet finns i y-led.
+            int srcX = Index * Width;      //Räkna ut vart på Bitmapen kortet finns i x-led.
+            int srcY = (int)Suit * Height; //Räkna ut vart på Bitmapen kortet finns i y-led.
             //Rita ut ett kort på angiven position.
 
             GraphicsState state = graphics.Save();
-            graphics.TranslateTransform(-width / 2, -height / 2, MatrixOrder.Append);
-            graphics.RotateTransform(rotation * RAD_TO_DEG, MatrixOrder.Append);
+            graphics.TranslateTransform(-Width / 2, -Height / 2, MatrixOrder.Append);
+            //graphics.RotateTransform(rotation * RAD_TO_DEG, MatrixOrder.Append);
             graphics.DrawImage(
                 faces,
-                new Rectangle(0, 0, width, height),
-                new Rectangle(srcX, srcY, width, height),
+                new Rectangle(0, 0, Width, Height),
+                new Rectangle(srcX, srcY, Width, Height),
                 GraphicsUnit.Pixel
             );
             graphics.Restore(state);

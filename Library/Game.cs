@@ -71,8 +71,8 @@ namespace Library
             float min = Math.Min(window.Width, window.Height);
             for (int i = 0; i < Players.Count; i++)
             {
-                float x = hw + (float)Math.Cos(angle * i) * min * 0.9f;
-                float y = hh + (float)Math.Sin(angle * i) * min * 0.9f;
+                float x = hw + (float)Math.Cos(angle * i) * (min * 0.5f - Card.Height / 2);
+                float y = hh + (float)Math.Sin(angle * i) * (min * 0.5f - Card.Height / 2);
 
                 GraphicsState state = graphics.Save();
                 graphics.TranslateTransform(x, y);
