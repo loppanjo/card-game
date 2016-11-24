@@ -16,15 +16,12 @@ namespace Library
         Club,
         Spade
     }
-
+    
     public class Card
     {
-        private const float RAD_TO_DEG = 180.0f / (float)Math.PI;
-
         private static Bitmap faces;
         private static Bitmap back;
-
-
+        
         public static int Width { get; set; }
         public static int Height { get; set; }
         
@@ -62,6 +59,8 @@ namespace Library
         public int Index { get; private set; }
         public int Value { get; private set; }
         public Suit Suit { get; private set; }
+
+        public PointF Position { get; set; }
 
         public bool Hidden { get; set; }
 
