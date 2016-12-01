@@ -20,7 +20,7 @@ namespace Client
         {
             InitializeComponent();
 
-            client = new Library.Client("Frosberg", "http://192.168.205.39:42069");
+            client = new Library.Client("Frosberg", "http://192.168.205.39:3000");
             client.Connect();
 
             shithead = new Shithead(new GameRules(), gameWindow1);
@@ -34,7 +34,7 @@ namespace Client
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
         {
-            client.Send("Hej");
+            client.Send("HEJSAN");
             /*
              * Start a server and connect
              */
