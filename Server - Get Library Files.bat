@@ -1,3 +1,3 @@
-git checkout client
+git checkout server
 git fetch origin
 git merge origin/library

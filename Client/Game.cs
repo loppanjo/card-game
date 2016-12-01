@@ -19,7 +19,8 @@ namespace Client
         public Game()
         {
             InitializeComponent();
-            client = new Library.Client("Frosberg", "http://localhost:8080");
+
+            client = new Library.Client("Frosberg", "http://192.168.205.39:42069");
             client.Connect();
 
             shithead = new Shithead(new GameRules(), gameWindow1);
