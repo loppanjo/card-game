@@ -12,6 +12,7 @@ using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System.Reflection;
+using System.Security.Principal;
 
 namespace Server
 {
@@ -23,6 +24,11 @@ namespace Server
 		public ServerForm()
 		{
 			InitializeComponent();
+			if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator))
+			{
+				MessageBox.Show("Run as administrator!");
+				Close();
+			}
 		}
 
 		private void btToggleServer_Click(object sender, EventArgs e)
@@ -46,8 +52,9 @@ namespace Server
 			{
 				SignalR = WebApp.Start(tbServerURI.Text);
 			}
-			catch (TargetInvocationException)
+			catch (TargetInvocationException e)
 			{
+				WriteToConsole(e.ToString());
 				WriteToConsole("Server failed to start. Either a server is already running on " + tbServerURI.Text + ", or the URI is invalid.");
 				//Re-enable button to let user try  
 				//to start server again 
@@ -80,17 +87,39 @@ namespace Server
 			}
 			rtbConsole.AppendText(message + Environment.NewLine);
 		}
+		internal void groupBoxAdd(string s)
+		{
+			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
+			{
+				this.Invoke((Action)(() =>
+						groupBoxAdd(s)
+				));
+				return;
+			}
+			lbxConnections.Items.Add(s);
+			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
+		}
+		internal void groupBoxRemove(string s)
+		{
+			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
+			{
+				this.Invoke((Action)(() =>
+						groupBoxRemove(s)
+				));
+				return;
+			}
+			lbxConnections.Items.Remove(s);
+			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
+		}
 		internal void AddConnection(string s)
 		{
 			WriteToConsole("Client connected: " + s);
-			lbxConnections.Items.Add(s);
-			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
+			groupBoxAdd(s);
 		}
 		internal void RemoveConnection(string s)
 		{
 			WriteToConsole("Client disconnected: " + s);
-			lbxConnections.Items.Remove(s);
-			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
+			groupBoxRemove(s);
 		}
 
 		private void WinFormsServer_FormClosing(object sender, FormClosingEventArgs e)
@@ -114,6 +143,7 @@ namespace Server
 	{
 		public void Send(string name, string message)
 		{
+			Program.MainForm.WriteToConsole($"{name}: {message}");
 			Clients.All.addMessage(name, message);
 		}
 		public override Task OnConnected()
