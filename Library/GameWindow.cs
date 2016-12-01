@@ -15,13 +15,21 @@ namespace Library
         public GameWindow()
         {
             InitializeComponent();
+            ResizeRedraw = true;
         }
 
-        public Player Player { get; set; }
+        public Game Game { get; set; }
 
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
+            Game.Draw(pe.Graphics);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            Invalidate();
+            base.OnResize(e);
         }
     }
 }

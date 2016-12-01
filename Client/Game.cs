@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,13 +13,27 @@ namespace Client
 {
     public partial class Game : Form
     {
+        Library.Client client;
+        Shithead shithead;
+
         public Game()
         {
             InitializeComponent();
+            client = new Library.Client("Frosberg", "http://localhost:8080");
+            client.Connect();
+
+            shithead = new Shithead(new GameRules(), gameWindow1);
+            gameWindow1.Game = shithead;
+            shithead.AddPlayer(new Player("Emil"));
+            shithead.AddPlayer(new Player("Eric"));
+            shithead.AddPlayer(new Player("André"));
+            shithead.AddPlayer(new Player("Lars"));
+            shithead.Start();
         }
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
         {
+            client.Send("Hej");
             /*
              * Start a server and connect
              */
@@ -32,7 +47,9 @@ namespace Client
                 if (connForm.ShowDialog() == DialogResult.OK)
                 {
                     //Use library method to connect
-                    //IF error
+                    //IF no error
+                    menuItemConnect.Enabled = false;
+                    menuItemDisconnect.Enabled = true;
                     //continue;
                     //ELSE
                     //break;
@@ -40,8 +57,6 @@ namespace Client
                 else
                     break;
             }
-            menuItemConnect.Enabled = false;
-            menuItemDisconnect.Enabled = true;
         }
 
         private void menuItemDisconnect_Click(object sender, EventArgs e)
@@ -54,6 +69,16 @@ namespace Client
         private void menuItemQuit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void gameWindow1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void Game_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            client.Disconnect();
         }
     }
 }
