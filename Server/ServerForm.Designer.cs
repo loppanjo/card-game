@@ -32,11 +32,11 @@
 			this.btToggleServer = new System.Windows.Forms.Button();
 			this.rtbConsole = new System.Windows.Forms.RichTextBox();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.lbPassword = new System.Windows.Forms.Label();
+			this.tbPassword = new System.Windows.Forms.TextBox();
 			this.lbServerURI = new System.Windows.Forms.Label();
 			this.tbServerURI = new System.Windows.Forms.TextBox();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.tbPassword = new System.Windows.Forms.TextBox();
-			this.lbPassword = new System.Windows.Forms.Label();
 			this.panel3 = new System.Windows.Forms.Panel();
 			this.gbConnections = new System.Windows.Forms.GroupBox();
 			this.lbxConnections = new System.Windows.Forms.ListBox();
@@ -69,6 +69,7 @@
 			this.rtbConsole.ReadOnly = true;
 			this.rtbConsole.Size = new System.Drawing.Size(269, 216);
 			this.rtbConsole.TabIndex = 2;
+			this.rtbConsole.TabStop = false;
 			this.rtbConsole.Text = "";
 			// 
 			// panel1
@@ -83,6 +84,25 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(269, 52);
 			this.panel1.TabIndex = 1;
+			// 
+			// lbPassword
+			// 
+			this.lbPassword.AutoSize = true;
+			this.lbPassword.Location = new System.Drawing.Point(3, 32);
+			this.lbPassword.Name = "lbPassword";
+			this.lbPassword.Size = new System.Drawing.Size(56, 13);
+			this.lbPassword.TabIndex = 3;
+			this.lbPassword.Text = "Password:";
+			// 
+			// tbPassword
+			// 
+			this.tbPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tbPassword.Location = new System.Drawing.Point(72, 29);
+			this.tbPassword.Name = "tbPassword";
+			this.tbPassword.Size = new System.Drawing.Size(197, 20);
+			this.tbPassword.TabIndex = 2;
+			this.tbPassword.UseSystemPasswordChar = true;
 			// 
 			// lbServerURI
 			// 
@@ -100,8 +120,8 @@
 			this.tbServerURI.Location = new System.Drawing.Point(72, 3);
 			this.tbServerURI.Name = "tbServerURI";
 			this.tbServerURI.Size = new System.Drawing.Size(197, 20);
-			this.tbServerURI.TabIndex = 0;
-			this.tbServerURI.Text = "http://localhost:42069";
+			this.tbServerURI.TabIndex = 1;
+			this.tbServerURI.Text = "http://*:3000";
 			// 
 			// panel2
 			// 
@@ -113,25 +133,6 @@
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(269, 76);
 			this.panel2.TabIndex = 3;
-			// 
-			// tbPassword
-			// 
-			this.tbPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbPassword.Location = new System.Drawing.Point(72, 29);
-			this.tbPassword.Name = "tbPassword";
-			this.tbPassword.Size = new System.Drawing.Size(197, 20);
-			this.tbPassword.TabIndex = 2;
-			this.tbPassword.UseSystemPasswordChar = true;
-			// 
-			// lbPassword
-			// 
-			this.lbPassword.AutoSize = true;
-			this.lbPassword.Location = new System.Drawing.Point(3, 32);
-			this.lbPassword.Name = "lbPassword";
-			this.lbPassword.Size = new System.Drawing.Size(56, 13);
-			this.lbPassword.TabIndex = 3;
-			this.lbPassword.Text = "Password:";
 			// 
 			// panel3
 			// 
@@ -164,7 +165,7 @@
 			this.lbxConnections.Location = new System.Drawing.Point(3, 16);
 			this.lbxConnections.Name = "lbxConnections";
 			this.lbxConnections.Size = new System.Drawing.Size(159, 282);
-			this.lbxConnections.TabIndex = 0;
+			this.lbxConnections.TabIndex = 3;
 			// 
 			// ServerForm
 			// 
