@@ -120,6 +120,7 @@ namespace Server
 		{
 			base.Clients.Client(Context.ConnectionId);
 			Program.MainForm.AddConnection(Context.ConnectionId);
+			Clients.All.addMessage(Context.ConnectionId, "connected");
 			return base.OnConnected();
 		}
 		public override Task OnDisconnected(bool stopCalled)
