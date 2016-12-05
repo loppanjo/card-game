@@ -46,6 +46,7 @@ namespace Server
 				Task.Run(() => StartServer());
 			}
 		}
+
 		private void StartServer()
 		{
 			try
@@ -87,6 +88,7 @@ namespace Server
 			}
 			rtbConsole.AppendText(message + Environment.NewLine);
 		}
+
 		internal void groupBoxAdd(string s)
 		{
 			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
@@ -99,6 +101,7 @@ namespace Server
 			lbxConnections.Items.Add(s);
 			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
 		}
+
 		internal void groupBoxRemove(string s)
 		{
 			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
@@ -111,11 +114,13 @@ namespace Server
 			lbxConnections.Items.Remove(s);
 			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
 		}
+
 		internal void AddConnection(string s)
 		{
 			WriteToConsole("Client connected: " + s);
 			groupBoxAdd(s);
 		}
+
 		internal void RemoveConnection(string s)
 		{
 			WriteToConsole("Client disconnected: " + s);
@@ -137,26 +142,6 @@ namespace Server
 		{
 			app.UseCors(CorsOptions.AllowAll);
 			app.MapSignalR();
-		}
-	}
-	public class MyHub : Hub
-	{
-		public void Send(string name, string message)
-		{
-			Program.MainForm.WriteToConsole($"{name}: {message}");
-			Clients.All.addMessage(name, message);
-		}
-		public override Task OnConnected()
-		{
-			base.Clients.Client(Context.ConnectionId);
-			Program.MainForm.AddConnection(Context.ConnectionId);
-			Clients.All.addMessage(Context.ConnectionId, "connected");
-			return base.OnConnected();
-		}
-		public override Task OnDisconnected(bool stopCalled)
-		{
-			Program.MainForm.RemoveConnection(Context.ConnectionId);
-			return base.OnDisconnected(stopCalled);
 		}
 	}
 }
