@@ -32,7 +32,7 @@ namespace Library
 
         public void Start()
         {
-            if (Players.Count > 0)
+            if (Players.Count >= rules.MinPlayers)
             {
                 Playing = true;
                 Deal();
@@ -42,7 +42,7 @@ namespace Library
 
         public void AddPlayer(Player player)
         {
-            if(!Playing)
+            if(!Playing && Players.Count < rules.MaxPlayers)
                 Players.Add(player);
         }
 
