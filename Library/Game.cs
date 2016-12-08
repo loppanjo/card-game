@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public abstract class Game
+    public abstract class Game : Hub
     {
         public const float RAD_TO_DEG = 180.0f / (float)Math.PI;
 
@@ -27,7 +28,7 @@ namespace Library
         protected List<Player> Players { get; set; }
         protected Deck Deck { get; set; }
 
-        public int TurnCount { get; set; } = 1;
+        public int CurrentTurn { get; set; }
         public bool Playing { get; set; }
 
         public void Start()
@@ -36,7 +37,7 @@ namespace Library
             {
                 Playing = true;
                 Deal();
-                // NextTurn(); DEBUG
+                NextTurn();
             }
         }
 
@@ -57,9 +58,11 @@ namespace Library
 
         private void NextTurn()
         {
-            current = Players[TurnCount - 1];
+            current = Players[CurrentTurn];
             Turn(current);
-            TurnCount++;
+            CurrentTurn++;
+            if (CurrentTurn > Players.Count - 1)
+                CurrentTurn = 0;
             if (Playing) NextTurn();
         }
 

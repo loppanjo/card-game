@@ -16,7 +16,7 @@ namespace Server
             Clients.All.addMessage(name, message);
         }
 
-        public void RecieveCard(Card card)
+        public void ReceiveCard(Card card)
         {
 
         }

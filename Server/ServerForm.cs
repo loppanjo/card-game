@@ -13,12 +13,14 @@ using Microsoft.Owin.Hosting;
 using Owin;
 using System.Reflection;
 using System.Security.Principal;
+using Library;
 
 namespace Server
 {
 	public partial class ServerForm : Form
 	{
 		private bool running;
+        private Game game;
 		private IDisposable SignalR { get; set; }
 
 		public ServerForm()
@@ -57,9 +59,9 @@ namespace Server
 			{
 				WriteToConsole(e.ToString());
 				WriteToConsole("Server failed to start. Either a server is already running on " + tbServerURI.Text + ", or the URI is invalid.");
-				//Re-enable button to let user try  
-				//to start server again 
-				this.Invoke((Action)(() =>
+                //Re-enable button to let user try  
+                //to start server again 
+                Invoke((Action)(() =>
 				{
 					running = false;
 					btToggleServer.Text = "Start Server";
@@ -68,7 +70,7 @@ namespace Server
 				}));
 				return;
 			}
-			this.Invoke((Action)(() =>
+            Invoke((Action)(() =>
 			{
 				running = true;
 				btToggleServer.Text = "Stop Server";
@@ -81,7 +83,7 @@ namespace Server
 		{
 			if (rtbConsole.InvokeRequired)
 			{
-				this.Invoke((Action)(() =>
+                Invoke((Action)(() =>
 						WriteToConsole(message)
 				));
 				return;
@@ -93,7 +95,7 @@ namespace Server
 		{
 			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
 			{
-				this.Invoke((Action)(() =>
+                Invoke((Action)(() =>
 						groupBoxAdd(s)
 				));
 				return;
@@ -106,7 +108,7 @@ namespace Server
 		{
 			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
 			{
-				this.Invoke((Action)(() =>
+                Invoke((Action)(() =>
 						groupBoxRemove(s)
 				));
 				return;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Shithead : Game
+    public class GoFish : Game
     {
-        public Shithead(GameRules rules, GameWindow window)
+        public GoFish(GameRules rules, GameWindow window)
             : base(rules, window)
+        {
+
+        }
+        
+        public void ReceiveCard(Card card)
         {
 
         }

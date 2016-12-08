@@ -14,7 +14,7 @@ namespace Client
     public partial class Game : Form
     {
         Library.Client client;
-        Shithead shithead;
+        GoFish shithead;
 
         public Game()
         {
@@ -23,7 +23,7 @@ namespace Client
             client = new Library.Client("Frosberg", "http://192.168.205.39:3000");
             client.Connect();
 
-            shithead = new Shithead(new GameRules(), gameWindow1);
+            shithead = new GoFish(new GameRules(), gameWindow1);
             gameWindow1.Game = shithead;
             shithead.AddPlayer(new Player("Emil"));
             shithead.AddPlayer(new Player("Eric"));
