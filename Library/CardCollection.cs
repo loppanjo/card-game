@@ -19,9 +19,10 @@ namespace Library
         }
 
         public int Count { get { return Cards.Count; } }
+        public List<Card> All { get { return Cards; } }
 
         protected List<Card> Cards { get; private set; }
-
+        
         public void Take(Card card)
         {
             Cards.Add(card);

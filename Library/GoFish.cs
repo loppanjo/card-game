@@ -22,7 +22,7 @@ namespace Library
             if (Context.ConnectionId == CurrentPlayer.ClientId &&
                 player.ClientId != CurrentPlayer.ClientId)
             {
-                List<Card> cards = player.Hand.GiveAll(card);
+                List<Card> cards = player.Hand.GiveAll(card.Value);
                 CurrentPlayer.Hand.TakeAll(cards);
 
                 if (cards.Count > 0) goAgain = true;
