@@ -16,7 +16,7 @@ namespace Library
 
         public delegate void PlayerConnected(HubCallerContext context);
         
-        public event PlayerConnected PlayerConnectedEvent;
+        public static event PlayerConnected PlayerConnectedEvent;
         
         private GameRules rules;
         private GameWindow window;
