@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Library
 {
@@ -52,8 +53,15 @@ namespace Library
             }
         }
 
+        public void RemovePlayer(Player player)
+        {
+            Players.Remove(player);
+            Clients.AllExcept(player.ClientId).OpponentDisconnect(new Opponent(player));
+        }
+
         public override Task OnConnected()
         {
+            MessageBox.Show("CLIENT CONNECTED!!!!!!!!!!!!!!");
             base.Clients.Client(Context.ConnectionId);
             AddPlayer(new Player(Context));
             PlayerConnectedEvent(Context);
