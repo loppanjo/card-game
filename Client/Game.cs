@@ -22,6 +22,7 @@ namespace Client
         public Game()
         {
             InitializeComponent();
+            players = new List<IPlayer>();
 
             client = new Library.Client("Frosberg", "http://192.168.204.149:3000");
             client.Connect();
@@ -72,17 +73,12 @@ namespace Client
             client.Disconnect();
         }
 
-        private void gameWindow1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         public void Draw(Graphics graphics)
         {
-            float angle = (float)(Math.PI * 2) / (players.Count + 1);
-            float hw = gameWindow1.Width / 2;
-            float hh = gameWindow1.Height / 2;
-            float min = Math.Min(gameWindow1.Width, gameWindow1.Height);
+            float angle = (float)(Math.PI * 2) / players.Count;
+            float hw = panelBoard.Width / 2;
+            float hh = panelBoard.Height / 2;
+            float min = Math.Min(panelBoard.Width, panelBoard.Height);
             for (int i = 0; i < players.Count; i++)
             {
                 float x = hw + (float)Math.Cos(angle * i) * (min * 0.45f - Card.Height / 2);
@@ -102,6 +98,11 @@ namespace Client
 
                 graphics.Restore(state);
             }
+        }
+
+        private void panelBoard_Paint(object sender, PaintEventArgs e)
+        {
+            Draw(e.Graphics);
         }
     }
 }
