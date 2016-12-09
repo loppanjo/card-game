@@ -62,15 +62,15 @@ namespace Library
 
             }
             );
-            try
-            {
+            //try
+            //{
                 await Connection.Start();
-            }
-            catch (HttpRequestException)
-            {
-                Console.WriteLine("Error Connecting!");
-                return;
-            }
+            //}
+            //catch (HttpRequestException)
+            //{
+             //   Console.WriteLine("Error Connecting!");
+             //   return;
+            //}
         }
     }
 }
