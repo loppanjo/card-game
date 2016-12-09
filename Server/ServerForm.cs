@@ -20,7 +20,7 @@ namespace Server
 	public partial class ServerForm : Form
 	{
 		private bool running;
-		private Game game;
+		private GoFish game;
 		private IDisposable SignalR { get; set; }
 
 		public ServerForm()
@@ -33,6 +33,8 @@ namespace Server
 			}
 			Game.PlayerConnectedEvent += Game_PlayerConnectedEvent;
 			Game.PlayerDisconnectedEvent += Game_PlayerDisconnectedEvent;
+
+			game = new GoFish(new GameRules());
 		}
 
 		private void Game_PlayerDisconnectedEvent(Microsoft.AspNet.SignalR.Hubs.HubCallerContext context)
