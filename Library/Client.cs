@@ -52,6 +52,11 @@ namespace Library
 
             }
             );
+            HubProxy.On("OpponentConnect", () =>
+            {
+
+            }
+            );
             HubProxy.On<List<Card>>("Deal", (cards) =>
             {
 
