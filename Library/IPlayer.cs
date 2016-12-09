@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    interface IPlayer
+    public interface IPlayer
     {
         void Draw(Graphics graphics);
     }
