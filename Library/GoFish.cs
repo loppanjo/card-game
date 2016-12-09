@@ -15,7 +15,7 @@ namespace Library
 
         }
         
-        public void ReceiveCard(Card card)
+        public void AskForCard(Card card)
         {
 
         }
