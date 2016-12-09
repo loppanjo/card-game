@@ -8,19 +8,14 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class MyHub : Hub
+    class GameHub : Hub
     {
         public void Send(string name, string message)
         {
             Program.MainForm.WriteToConsole($"{name}: {message}");
             Clients.All.addMessage(name, message);
         }
-
-        public void ReceiveCard(Card card)
-        {
-
-        }
-
+        
         public override Task OnConnected()
         {
             base.Clients.Client(Context.ConnectionId);

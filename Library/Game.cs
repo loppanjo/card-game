@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,7 +14,10 @@ namespace Library
     {
         public const float RAD_TO_DEG = 180.0f / (float)Math.PI;
 
-        private Player current;
+        public delegate void PlayerConnected(HubCallerContext context);
+        
+        public event PlayerConnected PlayerConnectedEvent;
+        
         private GameRules rules;
         private GameWindow window;
 
@@ -27,6 +31,7 @@ namespace Library
         
         protected List<Player> Players { get; set; }
         protected Deck Deck { get; set; }
+        protected Player CurrentPlayer { get; set; }
 
         public int CurrentTurn { get; set; }
         public bool Playing { get; set; }
@@ -47,6 +52,22 @@ namespace Library
                 Players.Add(player);
         }
 
+        public override Task OnConnected()
+        {
+            base.Clients.Client(Context.ConnectionId);
+            AddPlayer(new Player(Context));
+            PlayerConnectedEvent(Context);
+            //Program.MainForm.AddConnection(Context.ConnectionId);
+            Clients.All.addMessage(Context.ConnectionId, "connected");
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            PlayerConnectedEvent(Context);
+            return base.OnDisconnected(stopCalled);
+        }
+
         private void Deal()
         {
             for (int i = 0; i < Players.Count; i++)
@@ -56,14 +77,14 @@ namespace Library
             }
         }
 
-        private void NextTurn()
+        protected void NextTurn()
         {
-            current = Players[CurrentTurn];
-            Turn(current);
+            if (!Playing) return;
+            CurrentPlayer = Players[CurrentTurn];
+            Turn(CurrentPlayer);
             CurrentTurn++;
             if (CurrentTurn > Players.Count - 1)
                 CurrentTurn = 0;
-            if (Playing) NextTurn();
         }
 
         public abstract void Turn(Player player);

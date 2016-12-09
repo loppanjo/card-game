@@ -26,12 +26,53 @@ namespace Library
         {
             Cards.Add(card);
         }
-        
-        public Card Give(Suit suit, int value)
+
+        public void TakeAll(List<Card> cards)
         {
-            Card card = Cards.FirstOrDefault(c => c.Value == value && c.Suit == suit);
-            Cards.Remove(card);
-            return card;
+            Cards.AddRange(cards);
+        }
+        
+        public Card Give(Suit suit)
+        {
+            Card tmpCard = Cards.FirstOrDefault(c => c.Suit == suit);
+            Cards.Remove(tmpCard);
+            return tmpCard;
+        }
+
+        public Card Give(int value)
+        {
+            Card tmpCard = Cards.FirstOrDefault(c => c.Value == value);
+            Cards.Remove(tmpCard);
+            return tmpCard;
+        }
+
+        /// <summary>
+        /// Returns all cards with the same value or suit.
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns></returns>
+        public List<Card> GiveAll(Suit suit)
+        {
+            List<Card> cards = new List<Card>();
+            Card tmpCard = null;
+            while ((tmpCard = Give(suit)) != null)
+            {
+                cards.Add(tmpCard);
+                Cards.Remove(tmpCard);
+            }
+            return cards;
+        }
+
+        public List<Card> GiveAll(int value)
+        {
+            List<Card> cards = new List<Card>();
+            Card tmpCard = null;
+            while ((tmpCard = Give(value)) != null)
+            {
+                cards.Add(tmpCard);
+                Cards.Remove(tmpCard);
+            }
+            return cards;
         }
 
         /// <summary>
