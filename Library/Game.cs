@@ -17,7 +17,8 @@ namespace Library
         public delegate void PlayerConnected(HubCallerContext context);
         
         public static event PlayerConnected PlayerConnectedEvent;
-        
+        public static event PlayerConnected PlayerDisconnectedEvent;
+
         private GameRules rules;
         private GameWindow window;
 
@@ -58,13 +59,12 @@ namespace Library
             AddPlayer(new Player(Context));
             PlayerConnectedEvent(Context);
             //Program.MainForm.AddConnection(Context.ConnectionId);
-            Clients.All.addMessage(Context.ConnectionId, "connected");
             return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            PlayerConnectedEvent(Context);
+            PlayerDisconnectedEvent(Context);
             return base.OnDisconnected(stopCalled);
         }
 
@@ -74,6 +74,7 @@ namespace Library
             {
                 for (int j = 0; j < rules.StartCards; j++)
                     Players[i].Hand.Take(Deck.Deal());
+                Clients.User(Players[i].ClientId).Deal(Players[i].Hand.);
             }
         }
 
@@ -81,6 +82,7 @@ namespace Library
         {
             if (!Playing) return;
             CurrentPlayer = Players[CurrentTurn];
+            Clients.User(CurrentPlayer.ClientId).YourTurn();
             Turn(CurrentPlayer);
             CurrentTurn++;
             if (CurrentTurn > Players.Count - 1)
