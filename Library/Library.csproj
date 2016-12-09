@@ -81,12 +81,6 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameRules.cs" />
     <Compile Include="GoFish.cs" />
-    <Compile Include="GameWindow.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GameWindow.Designer.cs">
-      <DependentUpon>GameWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Hand.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="Opponent.cs" />
