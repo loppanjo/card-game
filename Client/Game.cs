@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +14,18 @@ namespace Client
 {
     public partial class Game : Form
     {
+        public const float RAD_TO_DEG = 180.0f / (float)Math.PI;
+
         Library.Client client;
+        List<Player> players;
+
         GoFish shithead;
 
         public Game()
         {
             InitializeComponent();
 
-            client = new Library.Client("Frosberg", "http://192.168.205.39:3000");
+            client = new Library.Client("Frosberg", "http://192.168.204.149:3000");
             client.Connect();
             
             shithead = new GoFish(new GameRules(), gameWindow1);
@@ -75,6 +80,33 @@ namespace Client
         private void gameWindow1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        public void Draw(Graphics graphics)
+        {
+            float angle = (float)(Math.PI * 2) / players.Count;
+            float hw = gameWindow1.Width / 2;
+            float hh = gameWindow1.Height / 2;
+            float min = Math.Min(gameWindow1.Width, gameWindow1.Height);
+            for (int i = 0; i < players.Count; i++)
+            {
+                float x = hw + (float)Math.Cos(angle * i) * (min * 0.45f - Card.Height / 2);
+                float y = hh + (float)Math.Sin(angle * i) * (min * 0.45f - Card.Height / 2);
+
+                GraphicsState state = graphics.Save();
+                graphics.TranslateTransform(x, y);
+
+                float dx = x - hw;
+                float dy = y - hh;
+
+                graphics.TranslateTransform(Card.Width / 2, Card.Height / 2);
+                graphics.RotateTransform((float)Math.Atan2(dy, dx) * RAD_TO_DEG + 90);
+                graphics.TranslateTransform(-Card.Width / 2, -Card.Height / 2);
+
+                players[i].Draw(graphics);
+
+                graphics.Restore(state);
+            }
         }
     }
 }
