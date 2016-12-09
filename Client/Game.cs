@@ -22,14 +22,9 @@ namespace Client
 
             client = new Library.Client("Frosberg", "http://192.168.205.39:3000");
             client.Connect();
-
+            
             shithead = new GoFish(new GameRules(), gameWindow1);
             gameWindow1.Game = shithead;
-            shithead.AddPlayer(new Player("Emil"));
-            shithead.AddPlayer(new Player("Eric"));
-            shithead.AddPlayer(new Player("André"));
-            shithead.AddPlayer(new Player("Lars"));
-            shithead.Start();
         }
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
@@ -72,14 +67,14 @@ namespace Client
             Application.Exit();
         }
 
-        private void gameWindow1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void Game_FormClosing(object sender, FormClosingEventArgs e)
         {
             client.Disconnect();
+        }
+
+        private void gameWindow1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

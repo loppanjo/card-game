@@ -45,10 +45,17 @@ namespace Library
         {
             Connection = new HubConnection(ServerURI);
             Connection.Closed += Disconnect;
-            HubProxy = Connection.CreateHubProxy("MyHub");
-            //Handle incoming event from server: use Invoke to write to console from SignalR's thread 
-            HubProxy.On<string, string>("AddMessage", (name, message) =>
-                Console.WriteLine($"{name}: {message}")
+            HubProxy = Connection.CreateHubProxy("GoFish");
+            //Handle incoming event from server: use Invoke to write to console from SignalR's thread
+            HubProxy.On("YourTurn", () =>
+            {
+
+            }
+            );
+            HubProxy.On<List<Card>>("Deal", (cards) =>
+            {
+
+            }
             );
             try
             {
