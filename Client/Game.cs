@@ -17,9 +17,7 @@ namespace Client
         public const float RAD_TO_DEG = 180.0f / (float)Math.PI;
 
         Library.Client client;
-        List<Player> opponents;
-
-        GoFish shithead;
+        List<IPlayer> players;
 
         public Game()
         {
@@ -27,9 +25,6 @@ namespace Client
 
             client = new Library.Client("Frosberg", "http://192.168.204.149:3000");
             client.Connect();
-            
-            shithead = new GoFish(new GameRules(), gameWindow1);
-            gameWindow1.Game = shithead;
         }
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
@@ -84,11 +79,11 @@ namespace Client
 
         public void Draw(Graphics graphics)
         {
-            float angle = (float)(Math.PI * 2) / (opponents.Count + 1);
+            float angle = (float)(Math.PI * 2) / (players.Count + 1);
             float hw = gameWindow1.Width / 2;
             float hh = gameWindow1.Height / 2;
             float min = Math.Min(gameWindow1.Width, gameWindow1.Height);
-            for (int i = 0; i < opponents.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 float x = hw + (float)Math.Cos(angle * i) * (min * 0.45f - Card.Height / 2);
                 float y = hh + (float)Math.Sin(angle * i) * (min * 0.45f - Card.Height / 2);
@@ -103,7 +98,7 @@ namespace Client
                 graphics.RotateTransform((float)Math.Atan2(dy, dx) * RAD_TO_DEG + 90);
                 graphics.TranslateTransform(-Card.Width / 2, -Card.Height / 2);
 
-                opponents[i].Draw(graphics);
+                players[i].Draw(graphics);
 
                 graphics.Restore(state);
             }
