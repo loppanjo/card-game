@@ -26,6 +26,7 @@ namespace Library
         public string Name { get; set; }
         public Hand Hand { get; private set; }
         public string ClientId { get; set; }
+        public bool Opponent { get; set; }
 
         public void Draw(Graphics graphics)
         {

@@ -49,8 +49,11 @@ namespace Library
 
         public void AddPlayer(Player player)
         {
-            if(!Playing && Players.Count < rules.MaxPlayers)
+            if (!Playing && Players.Count < rules.MaxPlayers)
+            {
                 Players.Add(player);
+                Clients.AllExcept(player.ClientId).OpponentConnect(new Opponent(player));
+            }
         }
 
         public override Task OnConnected()
@@ -66,6 +69,11 @@ namespace Library
         {
             PlayerDisconnectedEvent(Context);
             return base.OnDisconnected(stopCalled);
+        }
+
+        private void SyncPlayers()
+        {
+            
         }
 
         private void Deal()

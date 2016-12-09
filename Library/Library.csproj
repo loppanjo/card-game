@@ -88,6 +88,7 @@
       <DependentUpon>GameWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Hand.cs" />
+    <Compile Include="Opponent.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
