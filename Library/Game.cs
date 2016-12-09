@@ -18,14 +18,12 @@ namespace Library
         public static event PlayerConnected PlayerDisconnectedEvent;
 
         private GameRules rules;
-        private GameWindow window;
 
-        public Game(GameRules rules, GameWindow window)
+        public Game(GameRules rules)
         {
             this.rules = rules;
             Players = new List<Player>();
             Deck = new Deck(rules.DeckSize);
-            this.window = window;
         }
         
         protected List<Player> Players { get; set; }
@@ -47,8 +45,11 @@ namespace Library
 
         public void AddPlayer(Player player)
         {
-            if(!Playing && Players.Count < rules.MaxPlayers)
+            if (!Playing && Players.Count < rules.MaxPlayers)
+            {
                 Players.Add(player);
+                Clients.AllExcept(player.ClientId).OpponentConnect(new Opponent(player));
+            }
         }
 
         public override Task OnConnected()
@@ -64,6 +65,11 @@ namespace Library
         {
             PlayerDisconnectedEvent(Context);
             return base.OnDisconnected(stopCalled);
+        }
+
+        private void SyncPlayers()
+        {
+            
         }
 
         private void Deal()

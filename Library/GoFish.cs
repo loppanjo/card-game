@@ -11,8 +11,8 @@ namespace Library
     {
         private bool goAgain;
 
-        public GoFish(GameRules rules, GameWindow window)
-            : base(rules, window)
+        public GoFish(GameRules rules)
+            : base(rules)
         {
 
         }
