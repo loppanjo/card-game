@@ -156,6 +156,7 @@ namespace Server
 	{
 		public void Configuration(IAppBuilder app)
 		{
+			AppDomain.CurrentDomain.Load(typeof(GoFish).Assembly.FullName);
 			app.UseCors(CorsOptions.AllowAll);
 			app.MapSignalR();
 		}
