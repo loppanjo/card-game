@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Player
+    public class Player : IPlayer
     {
         public Player(string name)
         {
