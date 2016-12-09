@@ -20,7 +20,7 @@ namespace Server
 	public partial class ServerForm : Form
 	{
 		private bool running;
-        private Game game;
+		private Game game;
 		private IDisposable SignalR { get; set; }
 
 		public ServerForm()
@@ -31,6 +31,18 @@ namespace Server
 				MessageBox.Show("Run as administrator!");
 				Close();
 			}
+			Game.PlayerConnectedEvent += Game_PlayerConnectedEvent;
+			Game.PlayerDisconnectedEvent += Game_PlayerDisconnectedEvent;
+		}
+
+		private void Game_PlayerDisconnectedEvent(Microsoft.AspNet.SignalR.Hubs.HubCallerContext context)
+		{
+			RemoveConnection(context.ConnectionId);
+		}
+
+		private void Game_PlayerConnectedEvent(Microsoft.AspNet.SignalR.Hubs.HubCallerContext context)
+		{
+			AddConnection(context.ConnectionId);
 		}
 
 		private void btToggleServer_Click(object sender, EventArgs e)
@@ -59,23 +71,23 @@ namespace Server
 			{
 				WriteToConsole(e.ToString());
 				WriteToConsole("Server failed to start. Either a server is already running on " + tbServerURI.Text + ", or the URI is invalid.");
-                //Re-enable button to let user try  
-                //to start server again 
-                Invoke((Action)(() =>
-				{
-					running = false;
-					btToggleServer.Text = "Start Server";
-					btToggleServer.Enabled = true;
-					tbServerURI.Enabled = true;
-				}));
+				//Re-enable button to let user try  
+				//to start server again 
+				Invoke((Action)(() =>
+{
+	running = false;
+	btToggleServer.Text = "Start Server";
+	btToggleServer.Enabled = true;
+	tbServerURI.Enabled = true;
+}));
 				return;
 			}
-            Invoke((Action)(() =>
-			{
-				running = true;
-				btToggleServer.Text = "Stop Server";
-				btToggleServer.Enabled = true;
-			}));
+			Invoke((Action)(() =>
+{
+	running = true;
+	btToggleServer.Text = "Stop Server";
+	btToggleServer.Enabled = true;
+}));
 			WriteToConsole("Server started at " + tbServerURI.Text);
 		}
 
@@ -83,9 +95,9 @@ namespace Server
 		{
 			if (rtbConsole.InvokeRequired)
 			{
-                Invoke((Action)(() =>
-						WriteToConsole(message)
-				));
+				Invoke((Action)(() =>
+		WriteToConsole(message)
+));
 				return;
 			}
 			rtbConsole.AppendText(message + Environment.NewLine);
@@ -95,9 +107,9 @@ namespace Server
 		{
 			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
 			{
-                Invoke((Action)(() =>
-						groupBoxAdd(s)
-				));
+				Invoke((Action)(() =>
+		groupBoxAdd(s)
+));
 				return;
 			}
 			lbxConnections.Items.Add(s);
@@ -108,9 +120,9 @@ namespace Server
 		{
 			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
 			{
-                Invoke((Action)(() =>
-						groupBoxRemove(s)
-				));
+				Invoke((Action)(() =>
+		groupBoxRemove(s)
+));
 				return;
 			}
 			lbxConnections.Items.Remove(s);
