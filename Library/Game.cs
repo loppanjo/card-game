@@ -18,14 +18,12 @@ namespace Library
         public static event PlayerConnected PlayerDisconnectedEvent;
 
         private GameRules rules;
-        private GameWindow window;
 
-        public Game(GameRules rules, GameWindow window)
+        public Game(GameRules rules)
         {
             this.rules = rules;
             Players = new List<Player>();
             Deck = new Deck(rules.DeckSize);
-            this.window = window;
         }
         
         protected List<Player> Players { get; set; }
