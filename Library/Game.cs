@@ -74,7 +74,7 @@ namespace Library
             {
                 for (int j = 0; j < rules.StartCards; j++)
                     Players[i].Hand.Take(Deck.Deal());
-                Clients.User(Players[i].ClientId).Deal(Players[i].Hand.);
+                Clients.User(Players[i].ClientId).Deal(Players[i].Hand.All);
             }
         }
 
