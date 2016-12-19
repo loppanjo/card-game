@@ -21,36 +21,25 @@ namespace Server
 	{
 		private bool running;
 		private GoFish game;
-		private IDisposable SignalR { get; set; }
 
 		public ServerForm()
 		{
 			InitializeComponent();
-			if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator))
-			{
-				MessageBox.Show("Run as administrator!");
-				Close();
-			}
-			Game.PlayerConnectedEvent += Game_PlayerConnectedEvent;
-			Game.PlayerDisconnectedEvent += Game_PlayerDisconnectedEvent;
 
 			game = new GoFish(new GameRules());
+            game.ClientConnectedEvent += Game_ClientConnectedEvent;
 		}
 
-		private void Game_PlayerDisconnectedEvent(Microsoft.AspNet.SignalR.Hubs.HubCallerContext context)
-		{
-			RemoveConnection(context.ConnectionId);
-		}
+        private void Game_ClientConnectedEvent(Player player)
+        {
+            WriteToConsole($"Player { player.Name } connected!");
+        }
 
-		private void Game_PlayerConnectedEvent(Microsoft.AspNet.SignalR.Hubs.HubCallerContext context)
-		{
-			AddConnection(context.ConnectionId);
-		}
-
-		private void btToggleServer_Click(object sender, EventArgs e)
+        private void btToggleServer_Click(object sender, EventArgs e)
 		{
 			if (running)
 			{
+                game.StopServer();
 				// stänger ner serverfönstret
 				Close();
 			}
@@ -58,106 +47,26 @@ namespace Server
 			{
 				WriteToConsole("Starting server...");
 				btToggleServer.Enabled = false;
-				tbServerURI.Enabled = false;
-				Task.Run(() => StartServer());
-			}
+                numPort.Enabled = false;
+                game.StartServer((int)numPort.Value);
+            }
 		}
-
-		private void StartServer()
-		{
-			try
-			{
-				SignalR = WebApp.Start(tbServerURI.Text);
-			}
-			catch (TargetInvocationException e)
-			{
-				WriteToConsole(e.ToString());
-				WriteToConsole("Server failed to start. Either a server is already running on " + tbServerURI.Text + ", or the URI is invalid.");
-				//Re-enable button to let user try  
-				//to start server again 
-				Invoke((Action)(() =>
-{
-	running = false;
-	btToggleServer.Text = "Start Server";
-	btToggleServer.Enabled = true;
-	tbServerURI.Enabled = true;
-}));
-				return;
-			}
-			Invoke((Action)(() =>
-{
-	running = true;
-	btToggleServer.Text = "Stop Server";
-	btToggleServer.Enabled = true;
-}));
-			WriteToConsole("Server started at " + tbServerURI.Text);
-		}
-
-		internal void WriteToConsole(String message)
+        
+		internal void WriteToConsole(string message)
 		{
 			if (rtbConsole.InvokeRequired)
 			{
 				Invoke((Action)(() =>
-		WriteToConsole(message)
-));
+		            WriteToConsole(message)
+                ));
 				return;
 			}
 			rtbConsole.AppendText(message + Environment.NewLine);
 		}
 
-		internal void groupBoxAdd(string s)
-		{
-			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
-			{
-				Invoke((Action)(() =>
-		groupBoxAdd(s)
-));
-				return;
-			}
-			lbxConnections.Items.Add(s);
-			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
-		}
-
-		internal void groupBoxRemove(string s)
-		{
-			if (lbxConnections.InvokeRequired || gbConnections.InvokeRequired)
-			{
-				Invoke((Action)(() =>
-		groupBoxRemove(s)
-));
-				return;
-			}
-			lbxConnections.Items.Remove(s);
-			gbConnections.Text = "Connections (" + lbxConnections.Items.Count + ")";
-		}
-
-		internal void AddConnection(string s)
-		{
-			WriteToConsole("Client connected: " + s);
-			groupBoxAdd(s);
-		}
-
-		internal void RemoveConnection(string s)
-		{
-			WriteToConsole("Client disconnected: " + s);
-			groupBoxRemove(s);
-		}
-
-		private void WinFormsServer_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			if (SignalR != null)
-			{
-				SignalR.Dispose();
-			}
-		}
-	}
-
-	class Startup
-	{
-		public void Configuration(IAppBuilder app)
-		{
-			app.UseCors(CorsOptions.AllowAll);
-			app.MapSignalR();
-		}
-	}
+        private void btnStartGame_Click(object sender, EventArgs e)
+        {
+            game.StartGame();
+        }
+    }
 }

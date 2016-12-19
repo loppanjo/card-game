@@ -43,6 +43,7 @@
             this.tbxIp.Name = "tbxIp";
             this.tbxIp.Size = new System.Drawing.Size(88, 20);
             this.tbxIp.TabIndex = 0;
+            this.tbxIp.Text = "127.0.0.1";
             // 
             // numPort
             // 
@@ -55,6 +56,11 @@
             this.numPort.Name = "numPort";
             this.numPort.Size = new System.Drawing.Size(88, 20);
             this.numPort.TabIndex = 1;
+            this.numPort.Value = new decimal(new int[] {
+            8080,
+            0,
+            0,
+            0});
             // 
             // lblPort
             // 
@@ -98,7 +104,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(173, 95);
+            this.ClientSize = new System.Drawing.Size(169, 91);
             this.ControlBox = false;
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConnect);

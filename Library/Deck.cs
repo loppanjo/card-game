@@ -15,10 +15,8 @@ namespace Library
             for (int i = 0; i < count; i++)
                 Cards.Add(new Card(i));
         }
-
-        /// <summary>
-        /// Blandar leken.
-        /// </summary>
+        
+        // Blandar leken.
         public void Shuffle()
         {
             for (int i = 0; i < Count; i++)
@@ -28,6 +26,7 @@ namespace Library
             }
         }
 
+        // Ge ut ett kort
         public Card Deal()
         {
             Card card = null;

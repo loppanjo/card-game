@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuGame = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,6 +36,7 @@
             this.menuItemDisconnect = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.panelBoard = new System.Windows.Forms.Panel();
+            this.update = new System.Windows.Forms.Timer(this.components);
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +47,7 @@
             this.menuGame});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(598, 24);
+            this.menuStrip.Size = new System.Drawing.Size(925, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -94,15 +96,21 @@
             this.panelBoard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelBoard.Location = new System.Drawing.Point(0, 24);
             this.panelBoard.Name = "panelBoard";
-            this.panelBoard.Size = new System.Drawing.Size(598, 380);
+            this.panelBoard.Size = new System.Drawing.Size(925, 584);
             this.panelBoard.TabIndex = 1;
             this.panelBoard.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBoard_Paint);
+            this.panelBoard.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelBoard_MouseClick);
+            this.panelBoard.Resize += new System.EventHandler(this.panelBoard_Resize);
+            // 
+            // update
+            // 
+            this.update.Tick += new System.EventHandler(this.update_Tick);
             // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 404);
+            this.ClientSize = new System.Drawing.Size(925, 608);
             this.Controls.Add(this.panelBoard);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
@@ -126,5 +134,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemDisconnect;
         private System.Windows.Forms.ToolStripMenuItem menuItemQuit;
         private System.Windows.Forms.Panel panelBoard;
+        private System.Windows.Forms.Timer update;
     }
 }

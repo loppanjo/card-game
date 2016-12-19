@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Library
 {
@@ -56,12 +57,14 @@ namespace Library
             Suit = (Suit)(index % 4); 
         }
 
-        public int Index { get; private set; }
-        public int Value { get; private set; }
-        public Suit Suit { get; private set; }
+        public int Index { get; set; }
+        public int Value { get; set; }
+        public Suit Suit { get; set; }
 
+        [XmlIgnore]
         public PointF Position { get; set; }
 
+        [XmlIgnore]
         public bool Hidden { get; set; }
 
         public override string ToString()

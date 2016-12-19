@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Library
 {
@@ -18,10 +19,13 @@ namespace Library
             Cards = cards;
         }
 
+        [XmlIgnore]
         public int Count { get { return Cards.Count; } }
+
+        [XmlIgnore]
         public List<Card> All { get { return Cards; } }
 
-        protected List<Card> Cards { get; private set; }
+        public List<Card> Cards { get; set; }
         
         public void Take(Card card)
         {
@@ -33,6 +37,11 @@ namespace Library
             Cards.AddRange(cards);
         }
         
+        public void Set(List<Card> cards)
+        {
+            Cards = cards;
+        }
+
         public Card Give(Suit suit)
         {
             Card tmpCard = Cards.FirstOrDefault(c => c.Suit == suit);
@@ -45,6 +54,12 @@ namespace Library
             Card tmpCard = Cards.FirstOrDefault(c => c.Value == value);
             Cards.Remove(tmpCard);
             return tmpCard;
+        }
+
+        public void HideAll()
+        {
+            for (int i = 0; i < Cards.Count; i++)
+                Cards[i].Hidden = true;
         }
 
         /// <summary>

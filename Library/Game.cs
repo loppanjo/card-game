@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,92 +12,97 @@ namespace Library
 {
     public abstract class Game : Hub
     {
-        public delegate void PlayerConnected(HubCallerContext context);
-        
-        public static event PlayerConnected PlayerConnectedEvent;
-        public static event PlayerConnected PlayerDisconnectedEvent;
-
         private GameRules rules;
+        private Thread gameThread;
 
         public Game(GameRules rules)
+            : base(rules)
         {
             this.rules = rules;
-            Players = new List<Player>();
             Deck = new Deck(rules.DeckSize);
+            gameThread = new Thread(GameThread);
+            gameThread.Start();
         }
         
-        protected List<Player> Players { get; set; }
         protected Deck Deck { get; set; }
         protected Player CurrentPlayer { get; set; }
+        public bool GoAgain { get; set; }
 
         public int CurrentTurn { get; set; }
-        public bool Playing { get; set; }
 
-        public void Start()
+        public void StartGame()
         {
+            // Starta spel om antalet spelare är större eller lika med minsta antal spelare
             if (Players.Count >= rules.MinPlayers)
+                GameStarted = true;
+        }
+
+        // En tråd som hanterar själva spelet/regler
+        public void GameThread()
+        {
+            while (true)
             {
-                Playing = true;
-                Deal();
-                NextTurn();
+                Thread.Sleep(500);
+                if (GameStarted)
+                {
+                    Players.All(new Message("GAME STATE", "STARTED"));
+                    Deal();
+                    NextTurn();  
+                }
             }
         }
-
-        public void AddPlayer(Player player)
-        {
-            if (!Playing && Players.Count < rules.MaxPlayers)
-            {
-                Players.Add(player);
-                Clients.AllExcept(player.ClientId).OpponentConnect(new Opponent(player));
-            }
-        }
-
-        public void RemovePlayer(Player player)
-        {
-            Players.Remove(player);
-            Clients.AllExcept(player.ClientId).OpponentDisconnect(new Opponent(player));
-        }
-
-        public override Task OnConnected()
-        {
-            MessageBox.Show("CLIENT CONNECTED!!!!!!!!!!!!!!");
-            base.Clients.Client(Context.ConnectionId);
-            AddPlayer(new Player(Context));
-            PlayerConnectedEvent(Context);
-            //Program.MainForm.AddConnection(Context.ConnectionId);
-            return base.OnConnected();
-        }
-
-        public override Task OnDisconnected(bool stopCalled)
-        {
-            PlayerDisconnectedEvent(Context);
-            return base.OnDisconnected(stopCalled);
-        }
-
+        
+        // Synka alla spelare så de kan se hur många kort de har
         private void SyncPlayers()
         {
-            
+            for (int i = 0; i < Players.Count; i++)
+                Players[i].Client.Send(new Message("SET PLAYERS", Players.GetAllExept(Players[i])));
+            Players.All(new Message("DECK SIZE", Deck.Count));
         }
 
+        // Dela ut kort till alla spelare
         private void Deal()
         {
+            Deck.Shuffle();
             for (int i = 0; i < Players.Count; i++)
             {
                 for (int j = 0; j < rules.StartCards; j++)
                     Players[i].Hand.Take(Deck.Deal());
-                Clients.User(Players[i].ClientId).Deal(Players[i].Hand.All);
+                Players[i].Client.Send(new Message("SET HAND", Players[i].Hand.All));
             }
         }
 
+        // Själva "loopen" för hela spelet
         protected void NextTurn()
         {
-            if (!Playing) return;
+            // Kolla om spelet är startat
+            if (!GameStarted) return;
+
+            // Synka alla spelare
+            SyncPlayers();
+
+            // Sätt nuvarande spelare
             CurrentPlayer = Players[CurrentTurn];
-            Clients.User(CurrentPlayer.ClientId).YourTurn();
+
+            // Skicka till alla andra vems tur det är
+            Players.AllExept(CurrentPlayer, new Message("GAME STATE", CurrentPlayer.Name + "'s TURN"));
+            
+            // Sätt "spela igen" till false
+            GoAgain = false;
+
+            // Kör den abstrakta funktionen för själva spelreglerna
             Turn(CurrentPlayer);
-            CurrentTurn++;
+
+            // Öka bara vilken tur det är om nuvarande spelare inte får spela igen
+            if(!GoAgain)
+                CurrentTurn++;
+
+            // Sätt turen till noll om den gått igenom alla spelare
             if (CurrentTurn > Players.Count - 1)
                 CurrentTurn = 0;
+
+            // Kör nästa tur rekursivt
+            NextTurn();
         }
 
         public abstract void Turn(Player player);

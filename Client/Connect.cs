@@ -19,7 +19,7 @@ namespace Client
 
         public string Ip { get; private set; }
         public int Port { get; private set; }
-
+        
         private void btnConnect_Click(object sender, EventArgs e)
         {
             Ip = tbxIp.Text;
