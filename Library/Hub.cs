@@ -9,82 +9,129 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class Hub
-    {
-        public delegate void PlayerConnected(Player player);
+	public class Hub
+	{
+		public delegate void PlayerConnected(Player player);
+		public delegate void PlayerDisconnected(Player player);
+		public delegate void WriteToConsole(string text);
 
-        public event PlayerConnected ClientConnectedEvent;
+		public event PlayerConnected ClientConnectedEvent;
+		public event PlayerDisconnected ClientDisconnectedEvent;
+		public event WriteToConsole WriteToConsoleEvent;
 
-        private TcpListener listener;
-        private GameRules gameRules;
-        
-        public Hub(GameRules gameRules)
-        {
-            this.gameRules = gameRules;
-            Players = new PlayerCollection();
-        }
-        
-        protected PlayerCollection Players { get; private set; }
-        public bool ServerStarted { get; set; }
-        public bool GameStarted { get; set; }
+		private TcpListener listener;
+		private GameRules gameRules;
+		private Thread dcThread;
 
-        // Starta servern på en port
-        public void StartServer(int port)
-        {
-            if (listener != null && ServerStarted)
-                listener.Stop();
-            listener = new TcpListener(IPAddress.Any, port);
-            listener.Start();
-            ServerStarted = true;
+		public Hub(GameRules gameRules)
+		{
+			dcThread = new Thread(DisconnectChecker);
+			this.gameRules = gameRules;
+			Players = new PlayerCollection();
+		}
 
-            // Börja att ta emot clienter
-            BeginAccept();
-        }
+		protected PlayerCollection Players { get; private set; }
+		public bool ServerStarted { get; set; }
+		public bool GameStarted { get; set; }
 
-        // Stoppa servern
-        public void StopServer()
-        {
-            listener.Stop();
-            ServerStarted = false;
-        }
-        
-        // Vänta på ett speciellt kommand från en spelare
-        public Message WaitForCommandFrom(Player player, string command)
-        {
-            Message message;
-            while ((message = player.Client.Receive()).Command != command)
-            { }
-            return message;
-        }
-        
-        private void BeginAccept()
-        {
-            listener.BeginAcceptTcpClient(AcceptClient, listener);
-        }
+		// Starta servern på en port
+		public bool StartServer(int port)
+		{
+			if (listener != null && ServerStarted)
+				listener.Stop();
+			listener = new TcpListener(IPAddress.Any, port);
+			try
+			{
+				listener.Start();
 
-        private void AcceptClient(IAsyncResult res)
-        {
-            // Fortsätt att acceptera clienter rekursivt
-            BeginAccept();
+				ServerStarted = true;
 
-            // Kolla om det inte redan finns tillräckligt med spelare och om spelet redan startat
-            if (Players.Count < gameRules.MaxPlayers && !GameStarted)
-            {
-                // Lägg till spelaren
-                TcpClient socket = listener.EndAcceptTcpClient(res);
-                Player player = Players.Add(socket);
+				// Börja att ta emot clienter
+				BeginAccept();
+				dcThread.Start();
+				return true;
+			}
+			catch (SocketException)
+			{
+				WriteToConsoleEvent("Port is already in use!");
+			}
+			catch (Exception ex)
+			{
+				WriteToConsoleEvent(ex.Message);
+			}
+			WriteToConsoleEvent("Starting server failed!");
+			return false;
+		}
 
-                // Ta emot spelarens namn
-                Message message = player.Client.Receive();
-                player.Name = (string)message.Data;
+		// Stoppa servern
+		public void StopServer()
+		{
+			listener.Stop();
+			ServerStarted = false;
+		}
 
-                // Meddela spelaren att den är med i spelet
-                player.Client.Send(new Message("GAME STATE", "WAITING"));
+		// Vänta på ett speciellt kommand från en spelare
+		public Message WaitForCommandFrom(Player player, string command)
+		{
+			Message message;
+			while ((message = player.Client.Receive()).Command != command)
+			{ }
+			return message;
+		}
 
-                // Kalla på eventet som meddelar lyssnare om en ny spelare
-                ClientConnectedEvent(player);
-            }
-        }
-        
-    }
+		private void BeginAccept()
+		{
+			listener.BeginAcceptTcpClient(AcceptClient, listener);
+		}
+
+		private void AcceptClient(IAsyncResult res)
+		{
+			// Fortsätt att acceptera clienter rekursivt
+			BeginAccept();
+
+			// Kolla om det inte redan finns tillräckligt med spelare och om spelet redan startat
+			if (Players.Count < gameRules.MaxPlayers && !GameStarted)
+			{
+				// Lägg till spelaren
+				TcpClient socket = listener.EndAcceptTcpClient(res);
+				Player player = Players.Add(socket);
+
+				// Ta emot spelarens namn
+				Message message = player.Client.Receive();
+				player.Name = (string)message.Data;
+
+				// Meddela spelaren att den är med i spelet
+				player.Client.Send(new Message("GAME STATE", "WAITING"));
+
+				// Kalla på eventet som meddelar lyssnare om en ny spelare
+				ClientConnectedEvent(player);
+			}
+		}
+
+		private void DisconnectChecker()
+		{
+			while (true)
+			{
+				Thread.Sleep(500);
+				for (int i = 0; i < Players.Count; i++)
+				{
+					if (!SocketConnected(Players[i].Client.Socket.Client))
+					{
+						ClientDisconnectedEvent(Players[i]);
+						Players.Remove(Players[i]);
+					}
+				}
+			}
+		}
+		private bool SocketConnected(Socket s)
+		{
+			bool part1 = s.Poll(1000, SelectMode.SelectRead);
+			bool part2 = (s.Available == 0);
+			if (part1 && part2)
+				return false;
+			else
+				return true;
+		}
+	}
 }
+
