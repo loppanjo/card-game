@@ -18,6 +18,8 @@ namespace Library
             // Låt nuvarande spelare fråga en spelare efter ett kort
             player.Client.Send(new Message("GAME STATE", "YOU ASK"));
 
+            player.Client.Send(new Message("DRAW", ""));
+
             // Vänta på svar från spelare
             Message message = WaitForCommandFrom(player, "ASK");
             Ask ask = (Ask)message.Data;
@@ -40,6 +42,7 @@ namespace Library
                 // Om den frågade spelaren inte hade några kort så får 
                 // nuvarande spelaren ta ett kort från sjön
                 player.Client.Send(new Message("GAME STATE", "GO FISH"));
+                player.Client.Send(new Message("DRAW", ""));
                 WaitForCommandFrom(player, "FISH");
 
                 Card card = Deck.Deal();
@@ -47,7 +50,7 @@ namespace Library
                 player.Hand.Take(card);
                 player.Client.Send(new Message("ADD CARD", card));
             }
-
+            
             // Kolla om det finnns kort kvar
             GameStarted = Deck.Count > 0;
         }
