@@ -11,6 +11,7 @@ namespace Library
 {
 	public class Hub
 	{
+		// events för att kommunicera med serverformen
 		public delegate void PlayerConnected(Player player);
 		public delegate void PlayerDisconnected(Player player);
 		public delegate void WriteToConsole(string text);
@@ -40,6 +41,9 @@ namespace Library
 			if (listener != null && ServerStarted)
 				listener.Stop();
 			listener = new TcpListener(IPAddress.Any, port);
+
+			// startar servern, om något går fel ger den ett error,
+			// ett specifikt vid portfel, annars default.
 			try
 			{
 				listener.Start();
@@ -108,6 +112,7 @@ namespace Library
 			}
 		}
 
+		// kör i en separat tråd och letar efter klienter som kopplar ifrån.
 		private void DisconnectChecker()
 		{
 			while (true)
@@ -123,6 +128,7 @@ namespace Library
 				}
 			}
 		}
+		// kollar hur om en socket är uppkopplad till servern.
 		private bool SocketConnected(Socket s)
 		{
 			bool part1 = s.Poll(1000, SelectMode.SelectRead);
