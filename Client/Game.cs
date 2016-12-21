@@ -161,7 +161,7 @@ namespace Client
             DrawPond(min);
 
             // Start-vinkeln är 270 grader för att spelaren alltid ska vara längst ner på skärmen
-            const float startAngle = -(float)(Math.PI / 2) * 3;
+            const float startAngle = (float)(Math.PI / 2);
 
             // Räkna ut vinkeln mellan varje spelare (360 / antal spelare)
             float angle = (float)(Math.PI * 2) / (players.Count + 1);
@@ -178,7 +178,7 @@ namespace Client
             DrawPlayer(player, graphics, startAngle, hw, hh, min);
 
             // Visa spelets nuvarande "tillstånd"
-            GameMessage.Show(gameState, panelBoard.Width / 2, 30, graphics);
+            GameMessage.Show(gameState, panelBoard.Width / 2, 5, graphics);
         }
 
         // Rita sjön
@@ -198,7 +198,7 @@ namespace Client
                 float angle = (float)Math.PI * 2 * (float)random.NextDouble();
 
                 // Hitta en slumpmässig radius mellan 0 och minsta skärm-dimensionen
-                float radius = min * 0.3f * (float)random.NextDouble();
+                float radius = min * 0.2f * (float)random.NextDouble();
 
                 // Spara tillståndet av grafiken innan ritning
                 GraphicsState state = graphics.Save();
@@ -245,7 +245,7 @@ namespace Client
             graphics.TranslateTransform(-Card.Width / 2, -Card.Height / 2);
 
             // Rita spelaren
-            player.Draw(graphics);
+            player.Draw(graphics, panelBoard.Width);
 
             // Återställ grafiken som den var innan
             graphics.Restore(state);
