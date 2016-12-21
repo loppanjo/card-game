@@ -30,11 +30,18 @@ namespace Library
         public void Take(Card card)
         {
             Cards.Add(card);
+            Sort();
         }
 
         public void TakeAll(List<Card> cards)
         {
             Cards.AddRange(cards);
+            Sort();
+        }
+
+        public void Sort()
+        {
+            Cards.Sort((a, b) => a.Value - b.Value);
         }
         
         public void Set(List<Card> cards)

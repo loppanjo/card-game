@@ -90,11 +90,13 @@ namespace Library
             // Sätt "spela igen" till false
             GoAgain = false;
 
+            Players.All(new Message("DRAW", ""));
+
             // Kör den abstrakta funktionen för själva spelreglerna
             Turn(CurrentPlayer);
-
+            
             // Öka bara vilken tur det är om nuvarande spelare inte får spela igen
-            if(!GoAgain)
+            if (!GoAgain)
                 CurrentTurn++;
 
             // Sätt turen till noll om den gått igenom alla spelare

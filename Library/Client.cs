@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -20,6 +22,8 @@ namespace Library
         
         private NetworkStream stream;
         private Thread receiveThread;
+
+        private List<Message> commandBuffer = new List<Message>();
 
         public Client(string username)
         {
@@ -60,6 +64,17 @@ namespace Library
             Socket.Close();
             stream?.Close();
             receiveThread?.Abort();
+        }
+
+        public void AddCommand(Message command)
+        {
+            commandBuffer.Add(command);
+        }
+
+        public void SendCommands()
+        {
+            Send(new Message("COMMAND BUFFER", commandBuffer));
+            commandBuffer = new List<Message>();
         }
 
         // Skicka ett meddelande

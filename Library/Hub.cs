@@ -80,6 +80,7 @@ namespace Library
 
                 // Meddela spelaren att den är med i spelet
                 player.Client.Send(new Message("GAME STATE", "WAITING"));
+                player.Client.Send(new Message("DRAW", ""));
 
                 // Kalla på eventet som meddelar lyssnare om en ny spelare
                 ClientConnectedEvent(player);

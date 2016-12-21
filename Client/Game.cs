@@ -79,6 +79,9 @@ namespace Client
                 case "DECK SIZE":
                     decksize = (int)message.Data;
                     break;
+                case "DRAW":
+                    panelBoard.Invalidate();
+                    break;
                 default:
                     break;
             }
@@ -88,7 +91,7 @@ namespace Client
             //    players[i].Hand.HideAll();
 
             // Uppdatera skärmen
-            panelBoard.Invalidate();
+            
         }
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
@@ -251,11 +254,6 @@ namespace Client
         private void panelBoard_Paint(object sender, PaintEventArgs e)
         {
             Draw();
-        }
-
-        private void update_Tick(object sender, EventArgs e)
-        {
-            
         }
 
         private void panelBoard_MouseClick(object sender, MouseEventArgs e)
