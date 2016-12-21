@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace Library
@@ -36,9 +37,9 @@ namespace Library
         public Client Client { get; set; }
         public bool Opponent { get; set; }
 
-        public void Draw(Graphics graphics)
+        public void Draw(Graphics graphics, float boardWidth)
         {
-            Hand.Draw(graphics);
+            Hand.Draw(graphics, boardWidth);
         }
     }
 }

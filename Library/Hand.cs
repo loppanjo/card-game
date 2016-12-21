@@ -23,16 +23,26 @@ namespace Library
         public int HandWidth { get { return (Card.Width) * Count; } }
 
         // Rita alla kort i handen
-        public void Draw(Graphics graphics)
+        public void Draw(Graphics graphics, float boardWidth)
         {
+            float cardOffset = 0;
+            float offset = 0;
+
+            if (HandWidth > boardWidth)
+            {
+                cardOffset = (HandWidth - boardWidth) / (Cards.Count - 1);
+                offset = (HandWidth - boardWidth) / Cards.Count;
+            }
+
+            GraphicsState state = graphics.Save();
+            graphics.ScaleTransform(-1, -1);
+            graphics.TranslateTransform(-((Card.Width - offset) * Cards.Count / 2) + Card.Width / 2 - Card.Width, -Card.Height);
             for (int i = 0; i < Cards.Count; i++)
             {
-                GraphicsState state = graphics.Save();
-                Cards[i].Position = new PointF((-HandWidth / 2 + Card.Width / 2) + i * (Card.Width), 0);
-                graphics.TranslateTransform(Cards[i].Position.X, Cards[i].Position.Y);
                 Cards[i].Draw(graphics);
-                graphics.Restore(state);
+                graphics.TranslateTransform(Card.Width - cardOffset, 0);
             }
+            graphics.Restore(state);
         }
     }
 }
