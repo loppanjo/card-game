@@ -27,46 +27,60 @@ namespace Server
 			InitializeComponent();
 
 			game = new GoFish(new GameRules());
-            game.ClientConnectedEvent += Game_ClientConnectedEvent;
+			game.ClientConnectedEvent += Game_ClientConnectedEvent;
+			game.ClientDisconnectedEvent += Game_ClientDisconnectedEvent;
+			game.WriteToConsoleEvent += Game_WriteToConsoleEvent;
 		}
 
-        private void Game_ClientConnectedEvent(Player player)
-        {
-            WriteToConsole($"Player { player.Name } connected!");
-        }
+		private void Game_ClientConnectedEvent(Player player)
+		{
+			WriteToConsole($"Player { player.Name } connected!");
+		}
+		private void Game_ClientDisconnectedEvent(Player player)
+		{
+			WriteToConsole($"Player { player.Name } disconnected!");
+		}
+		private void Game_WriteToConsoleEvent(string text)
+		{
+			WriteToConsole(text);
+		}
 
-        private void btToggleServer_Click(object sender, EventArgs e)
+		private void btToggleServer_Click(object sender, EventArgs e)
 		{
 			if (running)
 			{
-                game.StopServer();
+				game.StopServer();
 				// stänger ner serverfönstret
 				Close();
 			}
 			else
 			{
 				WriteToConsole("Starting server...");
-				btToggleServer.Enabled = false;
-                numPort.Enabled = false;
-                game.StartServer((int)numPort.Value);
-            }
+				
+				if (game.StartServer((int)numPort.Value))
+				{
+					btToggleServer.Enabled = false;
+					numPort.Enabled = false;
+					WriteToConsole("Server Started.");
+				}
+			}
 		}
-        
+
 		internal void WriteToConsole(string message)
 		{
 			if (rtbConsole.InvokeRequired)
 			{
 				Invoke((Action)(() =>
-		            WriteToConsole(message)
-                ));
+								WriteToConsole(message)
+								));
 				return;
 			}
 			rtbConsole.AppendText(message + Environment.NewLine);
 		}
 
-        private void btnStartGame_Click(object sender, EventArgs e)
-        {
-            game.StartGame();
-        }
-    }
+		private void btnStartGame_Click(object sender, EventArgs e)
+		{
+			game.StartGame();
+		}
+	}
 }
