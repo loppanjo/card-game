@@ -41,7 +41,6 @@ namespace Client
 
             player = new Player(name);
             player.Client.ReceivedMessageEvent += Client_ReceivedMessageEvent;
-            //player.Client.Connect("127.0.0.1", 8080);
 
             graphics = panelBoard.CreateGraphics();
         }
@@ -265,16 +264,28 @@ namespace Client
             if (gameState != "YOU ASK") return;
             
             // Räkna ut alla värden för att ta reda på vart spelaren har sina kort
-            const float startAngle = -(float)(Math.PI / 2) * 3;
+            const float startAngle = (float)(Math.PI / 2);
             float hw = panelBoard.Width / 2;
             float hh = panelBoard.Height / 2;
             float min = Math.Min(panelBoard.Width, panelBoard.Height);
             float x1 = hw + (float)Math.Cos(startAngle) * (min * 0.45f - Card.Height / 2) -
                        player.Hand.HandWidth / 2;
             float y1 = hh + (float)Math.Sin(startAngle) * (min * 0.45f - Card.Height / 2) - Card.Height / 2;
+            float clickAngle = (float)Math.Atan2(e.Y - hh, e.X - hw);
+            float angle = (float)(Math.PI * 2) / (players.Count + 1);
 
-            // Debug
-            selectedPlayer = players[0];
+            for (int i = 0; i < players.Count; i++)
+            {
+                float a = startAngle / 2 + angle * i;
+                float b = startAngle / 2 + angle * (i + 1);
+                if (clickAngle > a && clickAngle < b)
+                {
+                    selectedPlayer = players[i];
+                    for (int j = 0; j < players[i].Hand.Count; j++)
+                        Console.WriteLine(players[i].Hand.All[j].Value);
+                    break;
+                }
+            }
 
             // Kolla så spelaren har valt en moståndare att fråga
             if (selectedPlayer != null)
