@@ -28,6 +28,8 @@ namespace Client
         private int decksize = 0;
 
         private Player selectedPlayer = null;
+        private Card selectedCard = null;
+        private Rectangle selectedCardRect;
 
         private const int SEED = 1337;
         
@@ -248,6 +250,11 @@ namespace Client
 
             // Återställ grafiken som den var innan
             graphics.Restore(state);
+
+            if (selectedCard != null)
+            {
+                graphics.DrawRectangle(Pens.Red, selectedCardRect);
+            }
         }
 
         private void panelBoard_Paint(object sender, PaintEventArgs e)
@@ -271,49 +278,63 @@ namespace Client
             float x1 = hw + (float)Math.Cos(startAngle) * (min * 0.45f - Card.Height / 2) -
                        player.Hand.HandWidth / 2;
             float y1 = hh + (float)Math.Sin(startAngle) * (min * 0.45f - Card.Height / 2) - Card.Height / 2;
-            float clickAngle = (float)Math.Atan2(e.Y - hh, e.X - hw);
+            float clickAngle = NormalizeAngle((float)Math.Atan2(e.Y - hh, e.X - hw));
             float angle = (float)(Math.PI * 2) / (players.Count + 1);
-
+            
             for (int i = 0; i < players.Count; i++)
             {
-                float a = startAngle / 2 + angle * i;
-                float b = startAngle / 2 + angle * (i + 1);
+                float a = NormalizeAngle(startAngle / (players.Count + 1) + angle * (i + 1));
+                float b = a + angle;
                 if (clickAngle > a && clickAngle < b)
                 {
                     selectedPlayer = players[i];
-                    for (int j = 0; j < players[i].Hand.Count; j++)
-                        Console.WriteLine(players[i].Hand.All[j].Value);
+                    lblSelectedPlayer.Text = $"Player to ask: { selectedPlayer.Name }";
                     break;
                 }
             }
 
-            // Kolla så spelaren har valt en moståndare att fråga
-            if (selectedPlayer != null)
+            // Kör igenom alla kort i spelarens hand
+            for (int i = 0; i < player.Hand.Cards.Count; i++)
             {
-                // Kör igenom alla kort i spelarens hand
-                for (int i = 0; i < player.Hand.Cards.Count; i++)
-                {
-                    // Gör en rektangel för ett kort i handen
-                    Rectangle cardRect = new Rectangle((int)x1 + Card.Width * i, (int)y1, Card.Width, Card.Height);
+                // Gör en rektangel för ett kort i handen
+                Rectangle cardRect = new Rectangle((int)x1 + Card.Width * i, (int)y1, Card.Width, Card.Height);
 
-                    // Kolla om musen är innanför kortet när spelaren klickar
-                    if (e.X > cardRect.X && e.Y > cardRect.Y &&
-                        e.X < cardRect.X + cardRect.Width &&
-                        e.Y < cardRect.Y + cardRect.Height)
-                    {
-                        // Skicka "frågan" om korten till servern
-                        player.Client.Send(new Library.Message("ASK", new Ask(selectedPlayer.IP, player.Hand.Cards[i])));
-                        selectedPlayer = null;
-                        break;
-                    }
+                // Kolla om musen är innanför kortet när spelaren klickar
+                if (e.X > cardRect.X && e.Y > cardRect.Y &&
+                    e.X < cardRect.X + cardRect.Width &&
+                    e.Y < cardRect.Y + cardRect.Height)
+                {
+                    selectedCard = player.Hand.Cards[i];
+                    selectedCardRect = cardRect;
+                    panelBoard.Invalidate();
+                    break;
                 }
             }
+        }
+
+        private float NormalizeAngle(float angle)
+        {
+            while (angle < 0) angle += (float)Math.PI * 2;
+            while (angle > Math.PI * 2) angle -= (float)Math.PI * 2;
+            return angle;
         }
 
         private void panelBoard_Resize(object sender, EventArgs e)
         {
             // Uppdatera grafiken varje gång fönstret ändras
             graphics = panelBoard.CreateGraphics();
+        }
+
+        private void btnEndTurn_Click(object sender, EventArgs e)
+        {
+            if (selectedPlayer != null && selectedCard != null)
+            {
+                // Skicka "frågan" om korten till servern
+                player.Client.Send(new Library.Message("ASK", new Ask(selectedPlayer.IP, selectedCard)));
+
+                selectedPlayer = null;
+                selectedCard = null;
+            }
         }
     }
 }

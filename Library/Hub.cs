@@ -71,15 +71,23 @@ namespace Library
 		public void StopServer()
 		{
 			listener.Stop();
-			ServerStarted = false;
+            dcThread.Abort();
+            ServerStarted = false;
 		}
 
 		// Vänta på ett speciellt kommand från en spelare
 		public Message WaitForCommandFrom(Player player, string command)
 		{
 			Message message;
-			while ((message = player.Client.Receive()).Command != command)
-			{ }
+            try
+            {
+                while ((message = player.Client.Receive()).Command != command)
+                { }
+            }
+            catch
+            {
+                return new Message(command, "");
+            }
 			return message;
 		}
 
@@ -106,9 +114,10 @@ namespace Library
 
 				// Meddela spelaren att den är med i spelet
 				player.Client.Send(new Message("GAME STATE", "WAITING"));
-
-				// Kalla på eventet som meddelar lyssnare om en ny spelare
-				ClientConnectedEvent(player);
+                player.Client.Send(new Message("DRAW", ""));
+                
+                // Kalla på eventet som meddelar lyssnare om en ny spelare
+                ClientConnectedEvent(player);
 			}
 		}
 
