@@ -68,7 +68,10 @@ namespace Client
                 case "GAME STATE":
                     prevGameState = gameState;
                     gameState = (string)message.Data;
-                    lblGameState.Text = gameState;
+                    Invoke(new MethodInvoker(() =>
+                    {
+                        lblGameState.Text = gameState;
+                    }));
                     break;
                 case "SET PLAYERS":
                     players = (List<Player>)message.Data;
@@ -93,8 +96,12 @@ namespace Client
                     break;
                 case "DRAW":
                     if (players.Count == 1) selectedPlayer = players[0];
-                    lblSelectedPlayer.Text = $"Player to ask: " + selectedPlayer.Name;
-                    panelBoard.Invalidate();
+                    Invoke(new MethodInvoker(() =>
+                    {
+                        if(selectedPlayer != null)
+                            lblSelectedPlayer.Text = $"Player to ask: " + selectedPlayer.Name;
+                        panelBoard.Invalidate();
+                    }));
                     break;
                 default:
                     break;
