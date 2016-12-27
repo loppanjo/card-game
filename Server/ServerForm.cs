@@ -52,7 +52,7 @@ namespace Server
 			else
 			{
 				WriteToConsole("Starting server...");
-				
+
 				if (game.StartServer((int)numPort.Value))
 				{
 					btToggleServer.Enabled = false;
@@ -79,9 +79,10 @@ namespace Server
 			game.StartGame();
 		}
 
-        private void ServerForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            game.StopServer();
-        }
-    }
+		private void ServerForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Environment.Exit(1337);
+			//game.StopServer();
+		}
+	}
 }
