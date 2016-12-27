@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -12,8 +13,6 @@ namespace Library
 {
     public class Player
     {
-        private static Font font = new Font("Arial", 16);
-
         public Player() { }
 
         public Player(string name)
@@ -41,7 +40,6 @@ namespace Library
 
         public void Draw(Graphics graphics, float boardWidth)
         {
-            graphics.DrawString(Name, font, Brushes.Black, 0, -Card.Height - 8);
             Hand.Draw(graphics, boardWidth);
         }
     }

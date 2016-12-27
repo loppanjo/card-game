@@ -37,6 +37,12 @@ namespace Library
                 GameStarted = true;
         }
 
+        public override void StopServer()
+        {
+            base.StopServer();
+            gameThread.Abort();
+        }
+
         // En tråd som hanterar själva spelet/regler
         public void GameThread()
         {

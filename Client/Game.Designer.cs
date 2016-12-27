@@ -38,6 +38,7 @@
             this.panelBoard = new System.Windows.Forms.Panel();
             this.btnEndTurn = new System.Windows.Forms.Button();
             this.lblSelectedPlayer = new System.Windows.Forms.Label();
+            this.lblGameState = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -95,7 +96,9 @@
             // 
             // panelBoard
             // 
-            this.panelBoard.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelBoard.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelBoard.Location = new System.Drawing.Point(0, 54);
             this.panelBoard.Name = "panelBoard";
             this.panelBoard.Size = new System.Drawing.Size(925, 549);
@@ -106,9 +109,12 @@
             // 
             // btnEndTurn
             // 
+            this.btnEndTurn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.btnEndTurn.Location = new System.Drawing.Point(396, 27);
+            this.btnEndTurn.MaximumSize = new System.Drawing.Size(200, 23);
+            this.btnEndTurn.MinimumSize = new System.Drawing.Size(160, 23);
             this.btnEndTurn.Name = "btnEndTurn";
-            this.btnEndTurn.Size = new System.Drawing.Size(166, 23);
+            this.btnEndTurn.Size = new System.Drawing.Size(160, 23);
             this.btnEndTurn.TabIndex = 2;
             this.btnEndTurn.Text = "ASK";
             this.btnEndTurn.UseVisualStyleBackColor = true;
@@ -117,17 +123,30 @@
             // lblSelectedPlayer
             // 
             this.lblSelectedPlayer.AutoSize = true;
+            this.lblSelectedPlayer.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSelectedPlayer.Location = new System.Drawing.Point(12, 32);
             this.lblSelectedPlayer.Name = "lblSelectedPlayer";
-            this.lblSelectedPlayer.Size = new System.Drawing.Size(74, 13);
+            this.lblSelectedPlayer.Size = new System.Drawing.Size(89, 13);
             this.lblSelectedPlayer.TabIndex = 3;
             this.lblSelectedPlayer.Text = "Player to ask: ";
+            // 
+            // lblGameState
+            // 
+            this.lblGameState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblGameState.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGameState.Location = new System.Drawing.Point(720, 28);
+            this.lblGameState.Name = "lblGameState";
+            this.lblGameState.Size = new System.Drawing.Size(205, 23);
+            this.lblGameState.TabIndex = 4;
+            this.lblGameState.Text = "NONE";
+            this.lblGameState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 603);
+            this.Controls.Add(this.lblGameState);
             this.Controls.Add(this.lblSelectedPlayer);
             this.Controls.Add(this.btnEndTurn);
             this.Controls.Add(this.panelBoard);
@@ -155,5 +174,6 @@
         private System.Windows.Forms.Panel panelBoard;
         private System.Windows.Forms.Button btnEndTurn;
         private System.Windows.Forms.Label lblSelectedPlayer;
+        private System.Windows.Forms.Label lblGameState;
     }
 }

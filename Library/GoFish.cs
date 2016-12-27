@@ -35,6 +35,12 @@ namespace Library
 
                 // Ge korten till spelaren
                 player.Hand.TakeAll(cards);
+                if (player.Hand.Count == 0 && Deck.Count > 0)
+                {
+                    Card card = Deck.Deal();
+                    player.Hand.Take(card);
+                    cards.Add(card);
+                }
                 player.Client.Send(new Message("ADD CARDS", cards));
             }
             else if(Deck.Count > 0)
@@ -53,6 +59,21 @@ namespace Library
             
             // Kolla om det finnns kort kvar
             GameStarted = Deck.Count > 0;
+
+            if (!GameStarted)
+            {
+                // Hitta spelaren med mest par
+                Player best = null;
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (best == null || Players[i].Hand.Pairs.Count > best.Hand.Pairs.Count)
+                        best = Players[i];
+                }
+
+                // Meddela alla spelare vem som vunnit
+                Players.AllExept(best, new Message("GAME STATE", best.Name + " WIN!"));
+                best.Client.Send(new Message("GAME STATE", "YOU WIN"));
+            }
         }
     }
 }

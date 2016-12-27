@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,20 +32,29 @@ namespace Client
         private Card selectedCard = null;
         private Rectangle selectedCardRect;
 
+        private static Font font = new Font("Arial", 16);
+
         private const int SEED = 1337;
         
         public Game()
         {
             InitializeComponent();
             players = new List<Player>();
-
+            
             // Fråga efter spelarens namn
             name = Interaction.InputBox("Enter your name", "Player Name", "no name");
 
             player = new Player(name);
             player.Client.ReceivedMessageEvent += Client_ReceivedMessageEvent;
 
-            graphics = panelBoard.CreateGraphics();
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty
+            | BindingFlags.Instance | BindingFlags.NonPublic, null,
+            panelBoard, new object[] { true });
+            typeof(Panel).InvokeMember("ResizeRedraw", BindingFlags.SetProperty
+            | BindingFlags.Instance | BindingFlags.NonPublic, null,
+            panelBoard, new object[] { true });
+
+            //graphics = panelBoard.CreateGraphics();
         }
 
         private void Client_ReceivedMessageEvent(Library.Message message)
@@ -58,6 +68,7 @@ namespace Client
                 case "GAME STATE":
                     prevGameState = gameState;
                     gameState = (string)message.Data;
+                    lblGameState.Text = gameState;
                     break;
                 case "SET PLAYERS":
                     players = (List<Player>)message.Data;
@@ -177,9 +188,6 @@ namespace Client
 
             // Rita spelaren
             DrawPlayer(player, graphics, startAngle, hw, hh, min);
-
-            // Visa spelets nuvarande "tillstånd"
-            GameMessage.Show(gameState, panelBoard.Width / 2, 5, graphics);
         }
 
         // Rita sjön
@@ -232,6 +240,20 @@ namespace Client
             // Transformera hela grafiken till spelarens position på skärmen
             graphics.TranslateTransform(x, y);
 
+            GraphicsState nameState = graphics.Save();
+
+            graphics.TranslateTransform((float)Math.Cos(angle) * Card.Width, (float)Math.Sin(angle) * Card.Width);
+            float degRot = angle * RAD_TO_DEG + 90;
+            graphics.RotateTransform(degRot);
+            if (degRot == 180)
+            {
+                graphics.ScaleTransform(-1, -1);
+                graphics.TranslateTransform(0, -28);
+            }
+            graphics.DrawString(player.Name, font, (selectedPlayer == player) ? Brushes.Red : Brushes.White, -graphics.MeasureString(player.Name, font).Width / 2, 0);
+
+            graphics.Restore(nameState);
+
             // Räkna ut skillnaden mellan mitten på skärmen och spelaren
             float dx = x - hw;
             float dy = y - hh;
@@ -240,11 +262,12 @@ namespace Client
             graphics.TranslateTransform(Card.Width / 2, Card.Height / 2);
 
             // Rotera grafiken så korten pekar in mot mitten
-            graphics.RotateTransform((float)Math.Atan2(dy, dx) * RAD_TO_DEG + 90);
+            float rotation = (float)Math.Atan2(dy, dx) * RAD_TO_DEG + 90;
+            graphics.RotateTransform(rotation);
 
             // Transformera hela grafiken tillbaka till kanten av ett kort
             graphics.TranslateTransform(-Card.Width / 2, -Card.Height / 2);
-
+            
             // Rita spelaren
             player.Draw(graphics, panelBoard.Width);
 
@@ -259,6 +282,7 @@ namespace Client
 
         private void panelBoard_Paint(object sender, PaintEventArgs e)
         {
+            graphics = e.Graphics;
             Draw();
         }
 
@@ -289,15 +313,26 @@ namespace Client
                 {
                     selectedPlayer = players[i];
                     lblSelectedPlayer.Text = $"Player to ask: { selectedPlayer.Name }";
+                    panelBoard.Invalidate();
                     break;
                 }
             }
-
+            
             // Kör igenom alla kort i spelarens hand
-            for (int i = 0; i < player.Hand.Cards.Count; i++)
+            for (int i = player.Hand.Count - 1; i >= 0; i--)
             {
+                float cardOffset = 0;
+                float offset = 0;
+
+                if (player.Hand.HandWidth > panelBoard.Width)
+                {
+                    cardOffset = (player.Hand.HandWidth - panelBoard.Width) / (player.Hand.Count - 1);
+                    offset = (player.Hand.HandWidth - panelBoard.Width) / player.Hand.Count;
+                }
+
                 // Gör en rektangel för ett kort i handen
-                Rectangle cardRect = new Rectangle((int)x1 + Card.Width * i, (int)y1, Card.Width, Card.Height);
+                // Rectangle cardRect = new Rectangle((int)x1 + Card.Width * i, (int)y1, Card.Width, Card.Height);
+                Rectangle cardRect = new Rectangle(panelBoard.Width / 2 - (int)(Card.Width - offset) * player.Hand.Count / 2 + (int)(Card.Width - cardOffset) * i, (int)y1, Card.Width - (int)((i == player.Hand.Count - 1) ? 0 : cardOffset), Card.Height);
 
                 // Kolla om musen är innanför kortet när spelaren klickar
                 if (e.X > cardRect.X && e.Y > cardRect.Y &&
@@ -322,7 +357,7 @@ namespace Client
         private void panelBoard_Resize(object sender, EventArgs e)
         {
             // Uppdatera grafiken varje gång fönstret ändras
-            graphics = panelBoard.CreateGraphics();
+            //graphics = panelBoard.CreateGraphics();
         }
 
         private void btnEndTurn_Click(object sender, EventArgs e)
@@ -334,6 +369,7 @@ namespace Client
 
                 selectedPlayer = null;
                 selectedCard = null;
+                lblSelectedPlayer.Text = $"Player to ask: ";
             }
         }
     }

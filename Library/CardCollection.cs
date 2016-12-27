@@ -12,6 +12,7 @@ namespace Library
         public CardCollection()
         {
             Cards = new List<Card>();
+            Pairs = new List<Card>();
         }
 
         public CardCollection(List<Card> cards)
@@ -26,7 +27,8 @@ namespace Library
         public List<Card> All { get { return Cards; } }
 
         public List<Card> Cards { get; set; }
-        
+        public List<Card> Pairs { get; set; }
+
         public void Take(Card card)
         {
             Cards.Add(card);
@@ -42,6 +44,26 @@ namespace Library
         public void Sort()
         {
             Cards.Sort((a, b) => a.Value - b.Value);
+            int same = 1, prevVal = -1;
+            for (int i = 0; i < Count; i++)
+            {
+                if (Cards[i].Value == prevVal)
+                {
+                    same++;
+                    if (same == 4)
+                    {
+                        Pairs.AddRange(Cards.GetRange(i - 3, 4));
+                        Cards.RemoveRange(i - 3, 4);
+                        Console.WriteLine("GOT PAIR");
+                        break;
+                    }
+                }
+                else
+                {
+                    same = 1;
+                }
+                prevVal = Cards[i].Value;
+            }
         }
         
         public void Set(List<Card> cards)

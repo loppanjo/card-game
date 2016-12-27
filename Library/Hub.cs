@@ -68,9 +68,9 @@ namespace Library
 		}
 
 		// Stoppa servern
-		public void StopServer()
+		public virtual void StopServer()
 		{
-			listener.Stop();
+			listener?.Stop();
             dcThread.Abort();
             ServerStarted = false;
 		}

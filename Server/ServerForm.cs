@@ -78,5 +78,10 @@ namespace Server
 		{
 			game.StartGame();
 		}
-	}
+
+        private void ServerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            game.StopServer();
+        }
+    }
 }

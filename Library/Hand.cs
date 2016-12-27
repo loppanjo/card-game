@@ -11,6 +11,8 @@ namespace Library
 {
     public class Hand : CardCollection
     {
+        private static Font font = new Font("Arial", 16);
+
         public Hand() { }
 
         public Hand(List<Card> cards)
@@ -37,6 +39,7 @@ namespace Library
             GraphicsState state = graphics.Save();
             graphics.ScaleTransform(-1, -1);
             graphics.TranslateTransform(-((Card.Width - offset) * Cards.Count / 2) + Card.Width / 2 - Card.Width, -Card.Height);
+            
             for (int i = 0; i < Cards.Count; i++)
             {
                 Cards[i].Draw(graphics);
