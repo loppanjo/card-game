@@ -92,6 +92,8 @@ namespace Client
                     decksize = (int)message.Data;
                     break;
                 case "DRAW":
+                    if (players.Count == 1) selectedPlayer = players[0];
+                    lblSelectedPlayer.Text = $"Player to ask: " + selectedPlayer.Name;
                     panelBoard.Invalidate();
                     break;
                 default:
@@ -99,11 +101,11 @@ namespace Client
             }
 
             // Göm alla motståndares kort
-            //for (int i = 0; i < players.Count; i++)
-            //    players[i].Hand.HideAll();
+            for (int i = 0; i < players.Count; i++)
+                players[i].Hand.HideAll();
 
             // Uppdatera skärmen
-            
+
         }
 
         private void menuItemNewGame_Click(object sender, EventArgs e)
@@ -135,6 +137,7 @@ namespace Client
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         continue;
                     }
                 }

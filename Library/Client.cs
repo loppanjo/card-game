@@ -47,6 +47,8 @@ namespace Library
         // Starta anslutningen till en server
         public void Connect(string ip, int port)
         {
+            Socket = new TcpClient();
+
             // Anslut clienten till servern
             Socket.Connect(new IPEndPoint(IPAddress.Parse(ip), port));
 
